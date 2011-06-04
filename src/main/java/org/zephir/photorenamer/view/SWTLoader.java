@@ -7,7 +7,8 @@ import java.net.URLClassLoader;
 
 public class SWTLoader {
 	private final static String SWT_VERSION = "3.6.2";
-	
+	public static Object display = null;
+
 	public static void main(String[] args) {
 		loadSWTLibrary();
 		
@@ -57,6 +58,11 @@ public class SWTLoader {
 	        	System.out.println("Loading SWT jar: '"+swtFileUrl+"'");
 	        	addUrlMethod.invoke(classLoader, swtFileUrl);
 	        }
+	        
+	        // initialize the Display object in the main thread
+	        Class<?> mainClass = SWTLoader.class.getClassLoader().loadClass("org.eclipse.swt.widgets.Display");
+			display = mainClass.newInstance();
+			
 	    } catch (Exception e) {
 	        System.err.println("loadSwtJar() KO: " + e);
 	        e.printStackTrace();
@@ -70,7 +76,6 @@ public class SWTLoader {
 	public static URL getResourceURL(String path) {
 		try {
 			URL url = null;
-
 			File file = new File(path);
 			if (file.exists() && file.isDirectory()) {
 				url = file.toURI().toURL();
@@ -84,5 +89,9 @@ public class SWTLoader {
 		} catch (Exception e) {
 			return null;
 		}
+	}
+
+	public static Object getDisplay() {
+		return display;
 	}
 }

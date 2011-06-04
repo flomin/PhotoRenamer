@@ -13,25 +13,31 @@ import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
+import org.zephir.photorenamer.view.SWTLoader;
 
 public class ConsoleForm {
 
-	private final Shell sShell;  //  @jve:decl-index=0:visual-constraint="29,10"
+	private Shell sShell;  //  @jve:decl-index=0:visual-constraint="29,10"
 	private StyledText textArea = null;
 	
 	public ConsoleForm() {
 		super();
-		sShell = new Shell();
-		this.createSShell();
+		((Display) SWTLoader.getDisplay()).syncExec(new Runnable() {
+			public void run() {
+				createSShell();
+			}
+		});
 	}
 	
 	/**
 	 * This method initializes sShell
 	 */
 	private void createSShell() {
+		sShell = new Shell(((Display) SWTLoader.getDisplay()));
 		sShell.setText("Console");
 		sShell.setLayout(new FillLayout(SWT.HORIZONTAL));
 		sShell.setSize(new Point(810, 400));

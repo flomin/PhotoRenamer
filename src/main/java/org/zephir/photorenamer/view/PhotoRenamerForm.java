@@ -25,7 +25,7 @@ import org.zephir.photorenamer.core.PhotoRenamerCore;
 import org.zephir.util.ConsoleFormAppender;
 
 public class PhotoRenamerForm {	
-	private static Logger log = Logger.getLogger(PhotoRenamerForm.class);  //  @jve:decl-index=0:
+	private static Logger log = null;
 	private Shell sShell = null;  //  @jve:decl-index=0:visual-constraint="10,10"
 	private Label labelInputFolder = null;
 	private Text textInputFolder = null;
@@ -42,17 +42,22 @@ public class PhotoRenamerForm {
 	private Button buttonHelp = null;
 	
 	public static void main(String[] args) {
-		
-		Display display = Display.getDefault();
-		PhotoRenamerForm thisClass = new PhotoRenamerForm();
-		thisClass.createSShell();
-		thisClass.sShell.open();
-		
-		while (!thisClass.sShell.isDisposed()) {
-			if (!display.readAndDispatch())
-				display.sleep();
-		}
-		display.dispose();
+		final Display display = ((Display) SWTLoader.getDisplay());
+		display.syncExec(new Runnable() {
+			public void run() {
+				log = Logger.getLogger(PhotoRenamerForm.class);
+				
+				PhotoRenamerForm thisClass = new PhotoRenamerForm();
+				thisClass.createSShell();
+				thisClass.sShell.open();
+				
+				while (!thisClass.sShell.isDisposed()) {
+					if (!display.readAndDispatch())
+						display.sleep();
+				}
+				display.dispose();
+			}
+		});
 	}
 	
 	private void loadPreferences() {
@@ -113,7 +118,7 @@ public class PhotoRenamerForm {
 
 	
 	private void createSShell() {
-		sShell = new Shell(SWT.CLOSE | SWT.TITLE | SWT.MIN | SWT.MAX);
+		sShell = new Shell(((Display) SWTLoader.getDisplay()), SWT.CLOSE | SWT.TITLE | SWT.MIN | SWT.MAX);
 		sShell.setText("PhotoRenamer by wInd v" + PhotoRenamerConstants.VERSION);
 		sShell.setSize(new Point(530, 160));
 		sShell.setImage(new Image(Display.getCurrent(), getClass().getResourceAsStream("/skull2-16x16.gif")));
