@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fileset-config file-format-version="1.2.0" simple-config="true">
+    <local-check-config name="adt-lyon" location="http://adt-lyon.it.volvo.net/checkstyle-ADT.xml" type="remote" description="" />
+    <fileset name="all" enabled="true" check-config-name="adt-lyon" local="true">
+        <file-match-pattern match-pattern="\.java$" include-pattern="true" />
+        <file-match-pattern match-pattern="generated[/\\].*\.java$" include-pattern="false" />
+    </fileset>
+</fileset-config>
