@@ -8,13 +8,20 @@ import java.net.URLClassLoader;
 public class SWTLoader {
 	private final static String SWT_VERSION = "3.6.2";
 	public static Object display = null;
+	
+	public static final String MAIN_CLASS = "org.zephir.photorenamer.view.PhotoRenamerForm";
 
 	public static void main(String[] args) {
 		loadSWTLibrary();
 		
 		try {
+	        // initialize the Display object in the main thread
+	        Class<?> mainClass = SWTLoader.class.getClassLoader().loadClass("org.eclipse.swt.widgets.Display");
+			display = mainClass.newInstance();
+			
+			// launch the application
 			URLClassLoader classLoader = (URLClassLoader) SWTLoader.class.getClassLoader();
-			Class<?> mainClass = classLoader.loadClass("org.zephir.photorenamer.view.PhotoRenamerForm");
+			mainClass = classLoader.loadClass(MAIN_CLASS);
 			Method main = mainClass.getMethod("main", new Class[] { String[].class });
 			main.invoke(null, new Object[] { args });
 		} catch (Exception e) {
@@ -58,11 +65,6 @@ public class SWTLoader {
 	        	System.out.println("Loading SWT jar: '"+swtFileUrl+"'");
 	        	addUrlMethod.invoke(classLoader, swtFileUrl);
 	        }
-	        
-	        // initialize the Display object in the main thread
-	        Class<?> mainClass = SWTLoader.class.getClassLoader().loadClass("org.eclipse.swt.widgets.Display");
-			display = mainClass.newInstance();
-			
 	    } catch (Exception e) {
 	        System.err.println("loadSwtJar() KO: " + e);
 	        e.printStackTrace();
