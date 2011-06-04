@@ -12,8 +12,8 @@
 	<description>ProjectRenamer</description>
 	
 	<properties>
-		<compileSource>1.6</compileSource>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<compiler.version>1.6</compiler.version>
 	</properties>
 	
 	<!-- Required configuration for mvn deploy -->
@@ -154,27 +154,15 @@
 				</executions>
 			</plugin>
 			
-			<!--plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-source-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>attach-sources</id>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin-->
-			<!--plugin>
+			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
-					<source>1.5</source>
-					<target>1.5</target>
+					<source>${compiler.version}</source>
+					<target>${compiler.version}</target>
+					<encoding>${project.build.sourceEncoding}</encoding>
 				</configuration>
-			</plugin-->
+			</plugin>
 		</plugins>
 	</build>
-
 </project>
