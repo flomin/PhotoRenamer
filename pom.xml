@@ -108,10 +108,16 @@
 		</dependency>
 		
 		<!-- no public repository found, see file mvn_repo_special_jars.zip -->
-		<dependency>
+		<!-- dependency>
 			<groupId>org.eclipse</groupId>
 			<artifactId>swt_win32_x86</artifactId>
 			<version>3.6.2</version>
+		</dependency-->
+		<dependency>
+			<groupId>org.eclipse</groupId>
+			<artifactId>swt_macosx_x86</artifactId>
+			<version>3.6.2</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>mediachest</groupId>
@@ -131,13 +137,16 @@
 				<artifactId>maven-assembly-plugin</artifactId>
 				<version>2.2.1</version>
 				<configuration>
-					<descriptorRefs>
+					<!-- descriptorRefs>
 						<descriptorRef>jar-with-dependencies</descriptorRef>
-					</descriptorRefs>
+					</descriptorRefs -->
+					<descriptors>
+						<descriptor>src/main/assembly/assembly.xml</descriptor>
+					</descriptors>
 					<archive>
 						<manifestEntries>
 							<Main-Class>org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader</Main-Class>
-							<Rsrc-Main-Class>org.zephir.photorenamer.view.Loader</Rsrc-Main-Class>
+							<Rsrc-Main-Class>org.zephir.photorenamer.view.SWTLoader</Rsrc-Main-Class>
 							<Class-Path>.</Class-Path>
 							<Rsrc-Class-Path>./</Rsrc-Class-Path>
 						</manifestEntries>
