@@ -35,9 +35,10 @@ public class Loader {
 	        if (swtFileUrl == null) {
 	        	System.out.println("SWT jar not found ("+swtFileName+"), program exiting !");
 	        	System.exit(0);
+	        } else {
+	        	System.out.println("Loading SWT jar: '"+swtFileUrl+"'");
+	        	addUrlMethod.invoke(classLoader, swtFileUrl);
 	        }
-	        System.out.println("Loading SWT jar: '"+swtFileUrl+"'");
-	        addUrlMethod.invoke(classLoader, swtFileUrl);
 	    } catch (Exception e) {
 	        System.err.println("loadSwtJar() KO: " + e);
 	        e.printStackTrace();
@@ -54,7 +55,6 @@ public class Loader {
 
 			File file = new File(path);
 			if (file.exists() && file.isDirectory()) {
-				//propertiesFolder is already an absolute path
 				url = file.toURI().toURL();
 			} else {
 				url = Thread.currentThread().getContextClassLoader().getResource(path);

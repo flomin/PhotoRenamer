@@ -31,7 +31,7 @@ public class PhotoRenamerConstants {
 		"Parameters: \n" +
 		"Input folder: folder containing the photos to rename\n" +
 		"Photo suffix: suffix to add after the date in the filename of the photos\n" +
-		"Delta: delta to add or substract from the EXIF date (e.g.: -15s, 60m, -48h, -1d, 30d3h-15s)\n" +
+		"Delta: time to add or substract from the EXIF date in seconds(s)/minutes(m)/hours(h)/days(d) (e.g.: -15s, 60m, -48h, -1d, 30d3h-15s)\n" +
 		"Date pattern: format of the date (y: year M: month, d: day, H: hour, m: min, s: sec)\n" +
 		"Rename videos: whether the video files should be renamed too based on their creation date (no EXIF data)\n" +
 		"Rotate images: auto rotation of the images based on the EXIF orientation\n";

@@ -12,7 +12,7 @@
 	<description>ProjectRenamer</description>
 	
 	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.build.sourceEncoding>Cp1252</project.build.sourceEncoding>
 		<compiler.version>1.6</compiler.version>
 	</properties>
 	
@@ -157,6 +157,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
 				<configuration>
 					<source>${compiler.version}</source>
 					<target>${compiler.version}</target>
