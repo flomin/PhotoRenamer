@@ -54,7 +54,7 @@ public class PhotoRenamerCore {
 								}
 							}
 						} catch (CustomException e) {
-							log.error("Error during renaming of the photo '"+f.getAbsoluteFile()+"': " + e);
+							log.error("Error during renaming of the photo '"+f.getAbsoluteFile()+"': " + e, e);
 						}
 					} else if (lowerCaseName.endsWith("avi") || lowerCaseName.endsWith("mpg") || lowerCaseName.endsWith("mov") || lowerCaseName.endsWith("wmv") || lowerCaseName.endsWith("mts")) {
 						if (renameVideo) {

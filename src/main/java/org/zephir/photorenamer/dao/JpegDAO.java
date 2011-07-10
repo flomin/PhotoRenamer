@@ -132,7 +132,7 @@ public final class JpegDAO {
 
 						// write/update EXIF metadata to output stream
 						try {
-							new ExifRewriter().updateExifMetadataLossless(file, os, outputSet);
+							new ExifRewriter().updateExifMetadataLossy(file, os, outputSet);
 						} finally {
 							if (os != null) {
 								os.close();
