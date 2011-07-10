@@ -108,17 +108,17 @@
 		</dependency>
 		
 		<!-- no public repository found, see file mvn_repo_special_jars.zip -->
-		<!-- dependency>
+		<dependency>
 			<groupId>org.eclipse</groupId>
 			<artifactId>swt_win32_x86</artifactId>
 			<version>3.6.2</version>
-		</dependency-->
-		<dependency>
+		</dependency>
+		<!-- dependency>
 			<groupId>org.eclipse</groupId>
 			<artifactId>swt_macosx_x86</artifactId>
 			<version>3.6.2</version>
 			<scope>provided</scope>
-		</dependency>
+		</dependency -->
 		<dependency>
 			<groupId>mediachest</groupId>
 			<artifactId>mediautil</artifactId>
