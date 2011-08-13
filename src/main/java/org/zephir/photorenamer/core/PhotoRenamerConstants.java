@@ -4,7 +4,7 @@ public class PhotoRenamerConstants {
 
 	private PhotoRenamerConstants() {}
 
-	public static final String VERSION = "1.5";
+	public static final String VERSION = "1.5.3";
 
 	public static final String SUFFIX_ORIGINAL_FILENAME_TOKEN = "%ori%";
 	
