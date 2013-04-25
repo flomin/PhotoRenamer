@@ -4,6 +4,7 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +18,7 @@ public class PhotoRenamerCore {
 	private String pattern;
 	private String suffix;
 	private long deltaInSeconds;
-	private boolean renameVideo = false;
+	private boolean renameExtraFiles = false;
 	private boolean rotateImages = false;
 
 	public PhotoRenamerCore() { }
@@ -31,7 +32,7 @@ public class PhotoRenamerCore {
 		log.info("deltaInSeconds='"+getDeltaInSeconds()+"s'");
 		log.info("pattern='"+getPattern()+"'");
 		log.info("suffix='"+getSuffix()+"'");
-		log.info("renameVideo='"+getRenameVideo()+"'");
+		log.info("renameVideo='"+renameExtraFiles()+"'");
 
 		int nbPhotosRenamed = 0;
 		int nbPhotosRotated = 0;
@@ -42,8 +43,7 @@ public class PhotoRenamerCore {
 			} else {
 				if (f.isFile()) {
 					//file
-					String lowerCaseName = f.getName().toLowerCase();
-					if (lowerCaseName.endsWith("jpg")) {
+					if (isFileExtensionInList(f, PhotoRenamerConstants.FILES_WITH_METADATA_EXTENSION_LIST)) {
 						try {
 							File newFile = renamePhoto(f);
 							nbPhotosRenamed++;
@@ -56,8 +56,8 @@ public class PhotoRenamerCore {
 						} catch (CustomException e) {
 							log.error("Error during renaming of the photo '"+f.getAbsoluteFile()+"': " + e, e);
 						}
-					} else if (lowerCaseName.endsWith("avi") || lowerCaseName.endsWith("mpg") || lowerCaseName.endsWith("mov") || lowerCaseName.endsWith("wmv") || lowerCaseName.endsWith("mts")) {
-						if (renameVideo) {
+					} else if (isFileExtensionInList(f, PhotoRenamerConstants.FILES_TO_RENAME_EXTENSION_LIST)) {
+						if (renameExtraFiles) {
 							try {
 								renameVideo(f);
 								nbVideosRenamed++;
@@ -77,7 +77,19 @@ public class PhotoRenamerCore {
 		log.debug("");
 	}
 	
-	private boolean rotatePhoto(File f) throws CustomException {
+	private boolean isFileExtensionInList(final File f, final List<String> extensionList) {
+		boolean lRes = false;
+		final String lowerCaseName = f.getName().toLowerCase();
+		for (final String extension: extensionList) {
+			if (lowerCaseName.endsWith(extension)) {
+				lRes = true;
+				break;
+			}
+		}
+		return lRes;
+	}
+	
+	private boolean rotatePhoto(final File f) throws CustomException {
 		try {
 			return JpegDAO.rotateImage(f);
 		} catch (CustomException e) {
@@ -88,7 +100,7 @@ public class PhotoRenamerCore {
 		}
 	}
 
-	private File renamePhoto(File f) throws CustomException {
+	private File renamePhoto(final File f) throws CustomException {
 		try {
 			//get file original date
 			Date originalDate = JpegDAO.getDateTimeOriginal(f);
@@ -102,7 +114,7 @@ public class PhotoRenamerCore {
 		}
 	}
 
-	private void renameVideo(File f) throws CustomException {
+	private void renameVideo(final File f) throws CustomException {
 		try {
 			//get file original date
 			Date lastModifiedDate = new Date(f.lastModified());
@@ -116,12 +128,12 @@ public class PhotoRenamerCore {
 		}
 	}
 
-	private File renameFile(File f, Date originalDate) throws CustomException {
+	private File renameFile(final File f, final Date originalDate) throws CustomException {
 		try {
 			String oldFilename = f.getAbsolutePath();
 
 			//apply delta in seconds
-			long newTime = originalDate.getTime() + (getDeltaInSeconds() * 1000);
+			long newTime = originalDate.getTime() + getDeltaInSeconds() * 1000;
 			Date newDate = new Date(newTime);
 
 			//get new filename for the photo
@@ -159,7 +171,7 @@ public class PhotoRenamerCore {
 		return folderToProcess;
 	}
 
-	public void setFolderToProcess(String folderNameToProcess) {
+	public void setFolderToProcess(final String folderNameToProcess) {
 		if (folderNameToProcess == null) {
 			folderToProcess = null;
 		} else {
@@ -174,7 +186,7 @@ public class PhotoRenamerCore {
 		return pattern;
 	}
 
-	public void setPattern(String pattern) {
+	public void setPattern(final String pattern) {
 		this.pattern = pattern;
 	}
 
@@ -182,7 +194,7 @@ public class PhotoRenamerCore {
 		return deltaInSeconds;
 	}
 
-	public void setDeltaInSeconds(long deltaInSeconds) {
+	public void setDeltaInSeconds(final long deltaInSeconds) {
 		this.deltaInSeconds = deltaInSeconds;
 	}
 
@@ -193,8 +205,8 @@ public class PhotoRenamerCore {
 		long deltaInSecond = 0;
 		Iterator<String> tokenizer = new RETokenizer(delta, "[a-z]", true);
 		for (; tokenizer.hasNext(); ) {
-		    String valueStr = (String)tokenizer.next();
-		    String unit = (String)tokenizer.next().toLowerCase();
+		    String valueStr = tokenizer.next();
+		    String unit = tokenizer.next().toLowerCase();
 		    int value = Integer.parseInt(valueStr);
 		    if (unit.equals("s")) {
 		    	deltaInSecond += value;
@@ -209,7 +221,7 @@ public class PhotoRenamerCore {
 				throw new CustomException("setDelta("+delta+") KO: unit '"+unit+"' not recognized (unit possible: s, m, h, d)");
 			}
 		}
-		setDeltaInSeconds(deltaInSecond);		
+		setDeltaInSeconds(deltaInSecond);
 	}
 
 	public String getSuffix() {
@@ -219,19 +231,19 @@ public class PhotoRenamerCore {
 		return suffix;
 	}
 
-	public void setSuffix(String suffix) {
+	public void setSuffix(final String suffix) {
 		this.suffix = suffix;
 	}
 
-	public boolean getRenameVideo() {
-		return renameVideo;
+	public boolean renameExtraFiles() {
+		return renameExtraFiles;
 	}
 
-	public void setRenameVideo(boolean renameVideo) {
-		this.renameVideo = renameVideo;
+	public void setRenameExtraFiles(final boolean renameExtraFiles) {
+		this.renameExtraFiles = renameExtraFiles;
 	}
 
-	public void setRotateImages(boolean rotateImages) {
+	public void setRotateImages(final boolean rotateImages) {
 		this.rotateImages = rotateImages;
 	}
 }

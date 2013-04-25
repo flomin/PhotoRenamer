@@ -48,7 +48,7 @@ public class PhotoRenamerConsole {
 				core.setDelta(argsMap.get(PhotoRenamerConstants.COMMAND_LINE_ARG_DELTA));
 				core.setFolderToProcess(argsMap.get(PhotoRenamerConstants.COMMAND_LINE_ARG_FOLDER));
 				core.setSuffix(argsMap.get(PhotoRenamerConstants.COMMAND_LINE_ARG_SUFFIX));
-				core.setRenameVideo(argsMap.containsKey(PhotoRenamerConstants.COMMAND_LINE_ARG_VIDEO));
+				core.setRenameExtraFiles(argsMap.containsKey(PhotoRenamerConstants.COMMAND_LINE_ARG_EXTRA));
 				core.setRotateImages(argsMap.containsKey(PhotoRenamerConstants.COMMAND_LINE_ARG_ROTATE));
 
 				if (argsMap.containsKey(PhotoRenamerConstants.COMMAND_LINE_ARG_HELP)) {

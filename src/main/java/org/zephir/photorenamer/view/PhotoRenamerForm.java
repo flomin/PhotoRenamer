@@ -24,7 +24,7 @@ import org.zephir.photorenamer.core.PhotoRenamerConstants;
 import org.zephir.photorenamer.core.PhotoRenamerCore;
 import org.zephir.util.ConsoleFormAppender;
 
-public class PhotoRenamerForm {	
+public class PhotoRenamerForm {
 	private static Logger log = null;
 	private Shell sShell = null;  //  @jve:decl-index=0:visual-constraint="10,10"
 	private Label labelInputFolder = null;
@@ -37,13 +37,14 @@ public class PhotoRenamerForm {
 	private Label labelPattern = null;
 	private Text textPattern = null;
 	private Button buttonProceed = null;
-	private Button checkboxRenameVideo = null;
+	private Button checkboxRenameExtra = null;
 	private Button checkboxRotateImage = null;
 	private Button buttonHelp = null;
 	
-	public static void main(String[] args) {
-		final Display display = ((Display) SWTLoader.getDisplay());
+	public static void main(final String[] args) {
+		final Display display = (Display) SWTLoader.getDisplay();
 		display.syncExec(new Runnable() {
+			@Override
 			public void run() {
 				log = Logger.getLogger(PhotoRenamerForm.class);
 				
@@ -52,8 +53,9 @@ public class PhotoRenamerForm {
 				thisClass.sShell.open();
 				
 				while (!thisClass.sShell.isDisposed()) {
-					if (!display.readAndDispatch())
+					if (!display.readAndDispatch()) {
 						display.sleep();
+					}
 				}
 				display.dispose();
 			}
@@ -62,7 +64,7 @@ public class PhotoRenamerForm {
 	
 	private void loadPreferences() {
 		try {
-			if ((new File("PhotoRenamer.properties")).exists()) {
+			if (new File("PhotoRenamer.properties").exists()) {
 				Properties props = new Properties();
 				FileInputStream in = new FileInputStream("PhotoRenamer.properties");
 				props.load(in);
@@ -86,7 +88,7 @@ public class PhotoRenamerForm {
 				}
 				String renameVideo = props.getProperty("renameVideo");
 				if (renameVideo != null) {
-					checkboxRenameVideo.setSelection(renameVideo.equalsIgnoreCase("true"));
+					checkboxRenameExtra.setSelection(renameVideo.equalsIgnoreCase("true"));
 				}
 				String rotateImage = props.getProperty("rotateImage");
 				if (rotateImage != null) {
@@ -105,7 +107,7 @@ public class PhotoRenamerForm {
 			props.setProperty("delta", textDelta.getText());
 			props.setProperty("suffix", textSuffix.getText());
 			props.setProperty("pattern", textPattern.getText());
-			props.setProperty("renameVideo", checkboxRenameVideo.getSelection() ? "true" : "false");
+			props.setProperty("renameVideo", checkboxRenameExtra.getSelection() ? "true" : "false");
 			props.setProperty("rotateImage", checkboxRotateImage.getSelection() ? "true" : "false");
 			FileOutputStream out = new FileOutputStream("PhotoRenamer.properties");
 			props.store(out, "---No Comment---");
@@ -118,13 +120,14 @@ public class PhotoRenamerForm {
 
 	
 	private void createSShell() {
-		sShell = new Shell(((Display) SWTLoader.getDisplay()), SWT.CLOSE | SWT.TITLE | SWT.MIN | SWT.MAX);
+		sShell = new Shell((Display) SWTLoader.getDisplay(), SWT.CLOSE | SWT.TITLE | SWT.MIN | SWT.MAX);
 		sShell.setText("PhotoRenamer by wInd v" + PhotoRenamerConstants.VERSION);
 		sShell.setSize(new Point(530, 160));
 		sShell.setImage(new Image(Display.getCurrent(), getClass().getResourceAsStream("/skull2-16x16.gif")));
 		sShell.setLayout(null);
 		sShell.addShellListener(new org.eclipse.swt.events.ShellAdapter() {
-			public void shellClosed(org.eclipse.swt.events.ShellEvent e) {
+			@Override
+			public void shellClosed(final org.eclipse.swt.events.ShellEvent e) {
 				savePreferences();
 				ConsoleFormAppender.closeAll();
 			}
@@ -141,7 +144,8 @@ public class PhotoRenamerForm {
 		buttonInputFolder.setText("...");
 		buttonInputFolder.setBounds(new Rectangle(490, 2, 17, 19));
 		buttonInputFolder.addListener(SWT.Selection, new Listener() {
-			public void handleEvent(Event event) {
+			@Override
+			public void handleEvent(final Event event) {
 				DirectoryDialog directoryDialog = new DirectoryDialog(sShell);
 				directoryDialog.setFilterPath(textInputFolder.getText());
 				String dir = directoryDialog.open();
@@ -172,10 +176,10 @@ public class PhotoRenamerForm {
 		textPattern.setText(PhotoRenamerConstants.DEFAULT_PATTERN);
 		textPattern.setBounds(new Rectangle(105, 62, 200, 19));
 		
-		checkboxRenameVideo = new Button(sShell, SWT.CHECK);
-		checkboxRenameVideo.setText("Rename videos");
-		checkboxRenameVideo.setSelection(true);
-		checkboxRenameVideo.setBounds(new Rectangle(3, 83, 200, 19));
+		checkboxRenameExtra = new Button(sShell, SWT.CHECK);
+		checkboxRenameExtra.setText("Rename extra files");
+		checkboxRenameExtra.setSelection(true);
+		checkboxRenameExtra.setBounds(new Rectangle(3, 83, 200, 19));
 		
 		checkboxRotateImage = new Button(sShell, SWT.CHECK);
 		checkboxRotateImage.setText("Rotate images");
@@ -186,7 +190,8 @@ public class PhotoRenamerForm {
 		buttonProceed.setText("Proceed !");
 		buttonProceed.setBounds(new Rectangle(386, 51, 119, 29));
 		buttonProceed.addMouseListener(new org.eclipse.swt.events.MouseAdapter() {
-			public void mouseDown(org.eclipse.swt.events.MouseEvent e) {
+			@Override
+			public void mouseDown(final org.eclipse.swt.events.MouseEvent e) {
 				proceed();
 			}
 		});
@@ -195,7 +200,8 @@ public class PhotoRenamerForm {
 		buttonHelp.setText(" ? ");
 		buttonHelp.setBounds(new Rectangle(355, 51, 29, 29));
 		buttonHelp.addMouseListener(new org.eclipse.swt.events.MouseAdapter() {
-					public void mouseDown(org.eclipse.swt.events.MouseEvent e) {
+					@Override
+					public void mouseDown(final org.eclipse.swt.events.MouseEvent e) {
 						openHelpDialog("Help - PhotoRenamer", PhotoRenamerConstants.FORM_HELP);
 					}
 				});
@@ -203,7 +209,7 @@ public class PhotoRenamerForm {
 		loadPreferences();
 	}
 	
-	private void openHelpDialog(String title, String text) {
+	private void openHelpDialog(final String title, final String text) {
 		MessageBox mb = new MessageBox(sShell, SWT.OK | SWT.ICON_QUESTION);
 		mb.setText(title);
 		mb.setMessage(text);
@@ -219,16 +225,18 @@ public class PhotoRenamerForm {
 			core.setSuffix(textSuffix.getText());
 			core.setPattern(textPattern.getText());
 			core.setDelta(textDelta.getText());
-			core.setRenameVideo(checkboxRenameVideo.getSelection());
+			core.setRenameExtraFiles(checkboxRenameExtra.getSelection());
 			core.setRotateImages(checkboxRotateImage.getSelection());
 			
 			Runnable downloadRunnable = new Runnable() {
+				@Override
 				public void run() {
 					try {
 						core.processFolder();
 						
 						// processing finished
 						Display.getDefault().syncExec(new Runnable() {
+							@Override
 							public void run() {
 								buttonProceed.setEnabled(true);
 							}
