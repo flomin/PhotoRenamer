@@ -228,10 +228,14 @@ public class PhotoRenamerForm {
 			core.setRenameExtraFiles(checkboxRenameExtra.getSelection());
 			core.setRotateImages(checkboxRotateImage.getSelection());
 			
-			Runnable downloadRunnable = new Runnable() {
+			Runnable runnable = new Runnable() {
 				@Override
 				public void run() {
 					try {
+						// show console
+						ConsoleFormAppender.focus();
+						
+						// process
 						core.processFolder();
 						
 						// processing finished
@@ -247,7 +251,7 @@ public class PhotoRenamerForm {
 					}
 				}
 			};
-			new Thread(downloadRunnable).start();
+			new Thread(runnable).start();
 		} catch (Exception e) {
 			log.error("Error: " + e, e);
 			buttonProceed.setEnabled(true);

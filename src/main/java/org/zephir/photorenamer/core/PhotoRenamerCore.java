@@ -47,7 +47,7 @@ public class PhotoRenamerCore {
 						try {
 							File newFile = renamePhoto(f);
 							nbPhotosRenamed++;
-							if (rotateImages) {
+							if (rotateImages && isFileExtensionInList(f, PhotoRenamerConstants.FILES_ROTABLE)) {
 								boolean isRotated = rotatePhoto(newFile);
 								if (isRotated) {
 									nbPhotosRotated++;

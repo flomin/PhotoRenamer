@@ -17,8 +17,9 @@ public class PhotoRenamerConstants {
 	
 	public static final String USER_DIR = System.getProperty("user.dir");
 
-	public static final List<String> FILES_WITH_METADATA_EXTENSION_LIST = Arrays.asList(new String[] {"jpg", "jpeg"});
-	public static final List<String> FILES_TO_RENAME_EXTENSION_LIST = Arrays.asList(new String[] {"avi", "mpg", "mov", "wmv", "mts", "nef"});
+	public static final List<String> FILES_WITH_METADATA_EXTENSION_LIST = Arrays.asList(new String[] {"jpg", "jpeg", "tiff", "psd", "png", "bmp", "gif", "nef", "cr2", "orf", "arw", "rw2"});
+	public static final List<String> FILES_ROTABLE = Arrays.asList(new String[] {"jpg", "jpeg"});
+	public static final List<String> FILES_TO_RENAME_EXTENSION_LIST = Arrays.asList(new String[] {"avi", "mpg", "mov", "wmv", "mts"});
 	
 	// command-line arguments
 	public static final String COMMAND_LINE_ARG_PATTERN = "pattern";

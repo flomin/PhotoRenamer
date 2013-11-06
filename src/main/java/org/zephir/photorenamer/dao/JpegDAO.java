@@ -4,7 +4,6 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import mediautil.image.jpeg.LLJTran;
@@ -27,26 +26,48 @@ import org.slf4j.LoggerFactory;
 import org.zephir.photorenamer.core.PhotoRenamerCore;
 import org.zephir.util.exception.CustomException;
 
+import com.drew.imaging.ImageMetadataReader;
+import com.drew.metadata.Metadata;
+import com.drew.metadata.exif.ExifSubIFDDirectory;
+
 public final class JpegDAO {
 	private static Logger log = LoggerFactory.getLogger(PhotoRenamerCore.class);
 
 	private JpegDAO() {
 	}
 
-	private static SimpleDateFormat dateTimeOriginalItemFormat = new SimpleDateFormat("''yyyy:MM:dd HH:mm:ss''");
+//	private static SimpleDateFormat dateTimeOriginalItemFormat = new SimpleDateFormat("''yyyy:MM:dd HH:mm:ss''");
 
-	public static Date getDateTimeOriginal(File file) throws CustomException {
+//	public static Date getDateTimeOriginalOld(final File file) throws CustomException {
+//		try {
+//			IImageMetadata metadata = Sanselan.getMetadata(file);
+//			if (metadata instanceof JpegImageMetadata) {
+//				JpegImageMetadata jpegMetadata = (JpegImageMetadata) metadata;
+//				TiffField dateField = jpegMetadata.findEXIFValue(TiffConstants.EXIF_TAG_DATE_TIME_ORIGINAL);
+//				if (dateField != null) {
+//					String dateTimeOriginalItem = dateField.getValueDescription();
+//					return dateTimeOriginalItemFormat.parse(dateTimeOriginalItem);
+//				}
+//			}
+//			return null;
+//		} catch (Exception e) {
+//			throw new CustomException("getDateTimeOriginal(file='" + file.getAbsolutePath() + "') KO: " + e, e);
+//		}
+//	}
+	
+	public static Date getDateTimeOriginal(final File file) throws CustomException {
 		try {
-			IImageMetadata metadata = Sanselan.getMetadata(file);
-			if (metadata instanceof JpegImageMetadata) {
-				JpegImageMetadata jpegMetadata = (JpegImageMetadata) metadata;
-				TiffField dateField = jpegMetadata.findEXIFValue(TiffConstants.EXIF_TAG_DATE_TIME_ORIGINAL);
-				if (dateField != null) {
-					String dateTimeOriginalItem = dateField.getValueDescription();
-					return dateTimeOriginalItemFormat.parse(dateTimeOriginalItem);
-				}
+			Date date = null;
+			final Metadata metadata = ImageMetadataReader.readMetadata(file);
+			
+			// obtain the Exif directory
+			final ExifSubIFDDirectory directory = metadata.getDirectory(ExifSubIFDDirectory.class);
+
+			if (directory != null) {
+				// query the tag's value
+				date = directory.getDate(ExifSubIFDDirectory.TAG_DATETIME_ORIGINAL);
 			}
-			return null;
+			return date;
 		} catch (Exception e) {
 			throw new CustomException("getDateTimeOriginal(file='" + file.getAbsolutePath() + "') KO: " + e, e);
 		}
@@ -62,7 +83,7 @@ public final class JpegDAO {
 	// 4* = bottom, left
 	// 5* = left, top
 	// 7* = right, bottom
-	public static boolean rotateImage(File file) throws CustomException {
+	public static boolean rotateImage(final File file) throws CustomException {
 		try {
 			IImageMetadata metadata = Sanselan.getMetadata(file);
 			if (metadata instanceof JpegImageMetadata) {

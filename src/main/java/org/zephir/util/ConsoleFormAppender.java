@@ -18,18 +18,19 @@ public class ConsoleFormAppender extends AppenderSkeleton {
 		logPublisher = new LogPublishingThread(consoleForm, 500);
 	}
 
-	public static Logger add(Logger log) {
+	public static Logger add(final Logger log) {
 		log.addAppender(new ConsoleFormAppender());
-		log.setLevel((Level) Level.DEBUG);
+		log.setLevel(Level.DEBUG);
 		return log;
 	}
 
 	@Override
-	protected void append(LoggingEvent loggingevent) {
+	protected void append(final LoggingEvent loggingevent) {
 		boolean inError = loggingevent.getLevel().equals(Level.ERROR) || loggingevent.getLevel().equals(Level.FATAL);
 		logPublisher.addEvent(loggingevent.getMessage().toString(), inError);
 	}
 	
+	@Override
 	public void close() {
 		ConsoleFormAppender.closeAll();
 	}
@@ -43,8 +44,15 @@ public class ConsoleFormAppender extends AppenderSkeleton {
 		}
 	}
 
+	@Override
 	public boolean requiresLayout() {
 		return false;
+	}
+	
+	public static void focus() {
+		if (consoleForm != null) {
+			consoleForm.focus();
+		}
 	}
 }
 
@@ -54,7 +62,7 @@ class LogPublishingThread extends Thread {
 	private long pubInterval;
 	private boolean goon;
 	
-	public LogPublishingThread(ConsoleForm consoleForm, long pubInterval) {
+	public LogPublishingThread(final ConsoleForm consoleForm, final long pubInterval) {
 		this.events = new ArrayList<Event>(1000);
 		this.pubInterval = pubInterval;
 		this.consoleForm = consoleForm;
@@ -63,10 +71,11 @@ class LogPublishingThread extends Thread {
 		this.start();
 	}
 	
-	public void setConsoleForm(ConsoleForm consoleForm) {
+	public void setConsoleForm(final ConsoleForm consoleForm) {
 		this.consoleForm = consoleForm;
 	}
 
+	@Override
 	public void run() {
 		while (goon) {
 			synchronized (events) {
@@ -89,7 +98,7 @@ class LogPublishingThread extends Thread {
 		}
 	}
 
-	public void addEvent(String text, boolean inError) {
+	public void addEvent(final String text, final boolean inError) {
 		synchronized (events) {
 			events.add(new Event(text, inError));
 			//if (triggerPrio != null && prio.isGreaterOrEqual(triggerPrio))
@@ -105,20 +114,20 @@ class LogPublishingThread extends Thread {
 class Event {
 	private String message;
 	private boolean inError;
-	public Event(String message, boolean inError) {
+	public Event(final String message, final boolean inError) {
 		this.message = message;
 		this.inError = inError;
 	}
 	public String getMessage() {
 		return message;
 	}
-	public void setMessage(String message) {
+	public void setMessage(final String message) {
 		this.message = message;
 	}
 	public boolean isInError() {
 		return inError;
 	}
-	public void setInError(boolean inError) {
+	public void setInError(final boolean inError) {
 		this.inError = inError;
 	}
 }

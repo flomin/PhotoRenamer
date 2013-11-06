@@ -24,9 +24,13 @@ public class ConsoleForm {
 	private Shell sShell;  //  @jve:decl-index=0:visual-constraint="29,10"
 	private StyledText textArea = null;
 	
+	private static boolean showOnFirstLog = true;
+	private static boolean shownOnFirstLog = false;
+	
 	public ConsoleForm() {
 		super();
 		((Display) SWTLoader.getDisplay()).syncExec(new Runnable() {
+			@Override
 			public void run() {
 				createSShell();
 			}
@@ -37,13 +41,14 @@ public class ConsoleForm {
 	 * This method initializes sShell
 	 */
 	private void createSShell() {
-		sShell = new Shell(((Display) SWTLoader.getDisplay()));
+		sShell = new Shell((Display) SWTLoader.getDisplay());
 		sShell.setText("Console");
 		sShell.setLayout(new FillLayout(SWT.HORIZONTAL));
 		sShell.setSize(new Point(810, 400));
 		//to hide the window instead of closing it
 		sShell.addListener(SWT.Close, new Listener() {
-			public void handleEvent(Event event) {
+			@Override
+			public void handleEvent(final Event event) {
 				sShell.setVisible(false);
 				event.doit = false;
 			}
@@ -53,9 +58,10 @@ public class ConsoleForm {
 		textArea.setEditable(false);
 	}
 	
-	public void println(final String str, final boolean inError) {	
+	public void println(final String str, final boolean inError) {
 		final ConsoleForm cf = this;
 		sShell.getDisplay().asyncExec(new Runnable() {
+			@Override
 			public void run() {
 				String line = str + textArea.getLineDelimiter();
 				
@@ -75,16 +81,29 @@ public class ConsoleForm {
 					textArea.invokeAction(ST.TEXT_END);
 				}
 				cf.sShell.setVisible(true);
+			}
+		});
+		
+		if (showOnFirstLog && !shownOnFirstLog) {
+			shownOnFirstLog = true;
+			focus();
+		}
+	}
+	
+	public void focus() {
+		final ConsoleForm cf = this;
+		sShell.getDisplay().asyncExec(new Runnable() {
+			@Override
+			public void run() {
 				cf.sShell.forceActive();
 				cf.sShell.forceFocus();
 			}
-			
 		});
 	}
 
 	public String saveReport() throws IOException {
 		String reportFileName = String.format("%1$tY_%1$te%1$tm_%1$tH%1$tM%1$tS_report.log", Calendar.getInstance());
-		String parentFolder = (new File("temp")).getAbsoluteFile().getParentFile().getParent();
+		String parentFolder = new File("temp").getAbsoluteFile().getParentFile().getParent();
 		File report = new File(parentFolder, reportFileName);
  		List<String> lines = Arrays.asList(textArea.getText().split(textArea.getLineDelimiter()));
 		
@@ -104,7 +123,7 @@ public class ConsoleForm {
 		return sShell.isVisible();
 	}
 	
-	public void setVisible(boolean visible) {
+	public void setVisible(final boolean visible) {
 		sShell.setVisible(visible);
 	}
 }
