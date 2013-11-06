@@ -6,7 +6,7 @@
 	  	
 	<groupId>org.zephir.photorenamer</groupId> 
 	<artifactId>PhotoRenamer</artifactId>
-	<version>1.5.4</version>
+	<version>1.5.5</version>
 	<packaging>jar</packaging>
 	<name>ProjectRenamer</name>
 	<description>ProjectRenamer</description>
@@ -107,6 +107,12 @@
 			<version>0.97-incubator</version>
 		</dependency>
 		
+		<dependency>
+			<groupId>com.drewnoakes</groupId>
+			<artifactId>metadata-extractor</artifactId>
+			<version>2.6.4</version>
+		</dependency>
+		
 		<!-- no public repository found, see file mvn_repo_special_jars.zip -->
 		<dependency>
 			<groupId>org.eclipse</groupId>
@@ -128,7 +134,7 @@
 			<groupId>org.eclipse</groupId>
 			<artifactId>jar-in-jar-loader</artifactId>
 			<version>3.6.1</version>
-		</dependency>		
+		</dependency>
 	</dependencies>
 
 	<build>
