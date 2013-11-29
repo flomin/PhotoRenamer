@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.zephir.photorenamer.dao.JpegDAO;
@@ -28,11 +29,14 @@ public class PhotoRenamerCore {
 			log.error("processFolder() KO: folder must exist ('" + folderToProcess.getAbsolutePath() + "')");
 			throw new CustomException("processFolder() KO: folder must exist ('" + folderToProcess.getAbsolutePath() + "')");
 		}
-		log.info("folderToProcess='"+getFolderToProcess().getAbsolutePath()+"'");
-		log.info("deltaInSeconds='"+getDeltaInSeconds()+"s'");
-		log.info("pattern='"+getPattern()+"'");
-		log.info("suffix='"+getSuffix()+"'");
-		log.info("renameVideo='"+renameExtraFiles()+"'");
+		final String folderStr = "Folder to process: '"+getFolderToProcess().getAbsolutePath()+"'";
+		log.info(StringUtils.repeat("_", folderStr.length()));
+		log.info(folderStr);
+		log.info("Delta in seconds: "+getDeltaInSeconds()+"s");
+		log.info("Pattern: '"+getPattern()+"'");
+		log.info("Suffix: '"+getSuffix()+"'");
+		log.info("Rename extra files: "+renameExtraFiles());
+		log.info(StringUtils.repeat("¯", folderStr.length()));
 
 		int nbPhotosRenamed = 0;
 		int nbPhotosRotated = 0;

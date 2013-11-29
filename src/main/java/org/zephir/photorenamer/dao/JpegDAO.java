@@ -68,11 +68,109 @@ public final class JpegDAO {
 				date = directory.getDate(ExifSubIFDDirectory.TAG_DATETIME_ORIGINAL);
 			}
 			return date;
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			throw new CustomException("getDateTimeOriginal(file='" + file.getAbsolutePath() + "') KO: " + e, e);
 		}
 	}
 
+//	// http://www.impulseadventure.com/photo/exif-orientation.html
+//	// EXIF orientation values
+//	// 1 = top, left
+//	// 3 = bottom, right
+//	// 6 = right, top
+//	// 8 = left, bottom
+//	// 2* = top, right
+//	// 4* = bottom, left
+//	// 5* = left, top
+//	// 7* = right, bottom
+//	public static boolean rotateImage(final File file) throws CustomException {
+//		try {
+//			final Metadata metadata = ImageMetadataReader.readMetadata(file);
+//			final ExifIFD0Directory exifIFD0Directory = metadata.getDirectory(ExifIFD0Directory.class);
+//			if (exifIFD0Directory != null) {
+//				int orientation = exifIFD0Directory.getInt(ExifIFD0Directory.TAG_ORIENTATION);
+//				int rotationNeeded = -1;
+//				if (orientation == 6) { // orientation right, top
+//					// rotate 90° clockwise
+//					rotationNeeded = LLJTran.ROT_90;
+//					log.debug("Rotating '" + file.getAbsolutePath() + "' 90° clockwise.");
+//				} else if (orientation == 3) { // orientation bottom, right
+//					// rotate 180° clockwise
+//					rotationNeeded = LLJTran.ROT_180;
+//					log.debug("Rotating '" + file.getAbsolutePath() + "' 180° clockwise.");
+//				} else if (orientation == 8) { // orientation left, bottom
+//					// rotate 270° clockwise
+//					rotationNeeded = LLJTran.ROT_270;
+//					log.debug("Rotating '" + file.getAbsolutePath() + "' 270° clockwise.");
+//				}
+//
+//				if (rotationNeeded != -1) {
+//					// 1. Initialize LLJTran and Read the entire Image including Appx markers
+//					LLJTran llj = new LLJTran(file);
+//					// If you pass the 2nd parameter as false, Exif information is not
+//					// loaded and hence will not be written.
+//					llj.read(LLJTran.READ_ALL, true);
+//
+//					// 2. Transform the image using default options along with
+//					// transformation of the Orientation tags. Try other combinations of
+//					// LLJTran_XFORM.. flags. Use a jpeg with partial MCU (partialMCU.jpg)
+//					// for testing LLJTran.XFORM_TRIM and LLJTran.XFORM_ADJUST_EDGES
+//					int options = LLJTran.OPT_DEFAULTS | LLJTran.OPT_XFORM_ORIENTATION;
+//					llj.transform(rotationNeeded, options);
+//
+//					// 3. Save the Image which is already transformed as specified by the
+//					// input transformation in Step 2, along with the Exif header.
+//					OutputStream out = new BufferedOutputStream(new FileOutputStream(file));
+//					llj.save(out, LLJTran.OPT_WRITE_ALL);
+//					out.close();
+//
+//					// Cleanup
+//					llj.freeMemory();
+//
+//					// update the metadata back
+//					TiffImageMetadata exif = null;
+//					if (metaJpg != null) {
+//						exif = metaJpg.getExif();
+//					}
+//					TiffOutputSet outputSet = new TiffOutputSet();
+//					if (exif != null) {
+//						outputSet = exif.getOutputSet();
+//					}
+//
+//					// change orientation tag info
+//					if (outputSet != null) {
+//						outputSet.removeField(TiffConstants.TIFF_TAG_ORIENTATION);
+//						TiffOutputField newOrientationField = TiffOutputField.create(ExifTagConstants.EXIF_TAG_ORIENTATION, outputSet.byteOrder, 1);
+//						TiffOutputDirectory exifDirectory = outputSet.getOrCreateExifDirectory();
+//						exifDirectory.add(newOrientationField);
+//					}
+//
+//					// create stream using temp file for dst
+//					File tempFile = File.createTempFile("temp-" + System.currentTimeMillis(), ".jpeg");
+//					OutputStream os = new BufferedOutputStream(new FileOutputStream(tempFile));
+//
+//					// write/update EXIF metadata to output stream
+//					try {
+//						new ExifRewriter().updateExifMetadataLossy(file, os, outputSet);
+//					} finally {
+//						if (os != null) {
+//							os.close();
+//						}
+//					}
+//
+//					// copy temp file over original file
+//					FileUtils.copyFile(tempFile, file);
+//
+//					return true;
+//				}
+//			}
+//			return false;
+//		} catch (Throwable e) {
+//			throw new CustomException("rotateImage(file='" + file.getAbsolutePath() + "') KO: " + e, e);
+//		}
+//	}
+	
+	
 	// http://www.impulseadventure.com/photo/exif-orientation.html
 	// EXIF orientation values
 	// 1 = top, left
@@ -168,7 +266,7 @@ public final class JpegDAO {
 				}
 			}
 			return false;
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			throw new CustomException("rotateImage(file='" + file.getAbsolutePath() + "') KO: " + e, e);
 		}
 	}

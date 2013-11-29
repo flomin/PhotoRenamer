@@ -41,7 +41,8 @@ public class ConsoleForm {
 	 * This method initializes sShell
 	 */
 	private void createSShell() {
-		sShell = new Shell((Display) SWTLoader.getDisplay());
+		final Display display = (Display) SWTLoader.getDisplay();
+		sShell = new Shell(display);
 		sShell.setText("Console");
 		sShell.setLayout(new FillLayout(SWT.HORIZONTAL));
 		sShell.setSize(new Point(810, 400));
@@ -53,9 +54,15 @@ public class ConsoleForm {
 				event.doit = false;
 			}
 		});
+
 		textArea = new StyledText(sShell, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL | SWT.READ_ONLY);
 		textArea.setBackground(sShell.getDisplay().getSystemColor(SWT.COLOR_TITLE_INACTIVE_BACKGROUND_GRADIENT));
 		textArea.setEditable(false);
+		
+//	    // Choose a monospaced font
+//	    final Font font = new Font(display, "Courier", 8, SWT.NORMAL);
+////		final Font font = JFaceResources.getFont(JFaceResources.TEXT_FONT);
+//		textArea.setFont(font);
 	}
 	
 	public void println(final String str, final boolean inError) {
