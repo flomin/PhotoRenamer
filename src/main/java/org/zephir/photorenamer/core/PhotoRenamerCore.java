@@ -108,8 +108,13 @@ public class PhotoRenamerCore {
 		try {
 			//get file original date
 			Date originalDate = JpegDAO.getDateTimeOriginal(f);
-			
-			return renameFile(f, originalDate);
+			File newFile = f;
+			if (originalDate != null) {
+				newFile = renameFile(f, originalDate);
+			} else{
+				log.warn("Can't rename photo '"+f.getAbsoluteFile()+"': No EXIF data.");
+			}
+			return newFile;
 		} catch (CustomException e) {
 			throw e;
 		} catch (Exception e) {
