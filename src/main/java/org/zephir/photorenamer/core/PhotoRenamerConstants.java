@@ -5,11 +5,9 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 
-public class PhotoRenamerConstants {
+public interface PhotoRenamerConstants {
 
-	private PhotoRenamerConstants() {}
-
-	public static final String VERSION = "1.5.6";
+	public static final String VERSION = "1.5.7";
 
 	public static final String SUFFIX_ORIGINAL_FILENAME_TOKEN = "%ori%";
 	
@@ -20,6 +18,12 @@ public class PhotoRenamerConstants {
 	public static final List<String> FILES_WITH_METADATA_EXTENSION_LIST = Arrays.asList(new String[] {"jpg", "jpeg", "tiff", "psd", "png", "bmp", "gif", "nef", "cr2", "orf", "arw", "rw2"});
 	public static final List<String> FILES_ROTABLE = Arrays.asList(new String[] {"jpg", "jpeg"});
 	public static final List<String> FILES_TO_RENAME_EXTENSION_LIST = Arrays.asList(new String[] {"avi", "mpg", "mov", "wmv", "mts"});
+	
+	public static final int FORM_LINE_HEIGHT = 25;
+	public static final int FORM_LABEL_DELTA = 2;
+	public static final int FORM_BUTTON_HEIGHT = 29;
+	public static final int FORM_LINE_SPACE = 5;
+	public static final int FORM_LINE_TAB = 100;
 	
 	// command-line arguments
 	public static final String COMMAND_LINE_ARG_PATTERN = "pattern";

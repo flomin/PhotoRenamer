@@ -51,11 +51,16 @@ public class PhotoRenamerCore {
 						try {
 							File newFile = renamePhoto(f);
 							nbPhotosRenamed++;
-							if (rotateImages && isFileExtensionInList(f, PhotoRenamerConstants.FILES_ROTABLE)) {
-								boolean isRotated = rotatePhoto(newFile);
-								if (isRotated) {
-									nbPhotosRotated++;
+							
+							try {
+								if (rotateImages && isFileExtensionInList(f, PhotoRenamerConstants.FILES_ROTABLE)) {
+									boolean isRotated = rotatePhoto(newFile);
+									if (isRotated) {
+										nbPhotosRotated++;
+									}
 								}
+							} catch (CustomException e) {
+								log.error("Error during rotation of the photo '"+f.getAbsoluteFile()+"': " + e, e);
 							}
 						} catch (CustomException e) {
 							log.error("Error during renaming of the photo '"+f.getAbsoluteFile()+"': " + e, e);
@@ -77,7 +82,7 @@ public class PhotoRenamerCore {
 				}
 			}
 		}
-		log.debug(nbPhotosRenamed + " photo(s) ("+nbPhotosRotated+" rotated) and " + nbVideosRenamed + " video(s) renamed");
+		log.debug(nbPhotosRenamed + " photo(s) renamed ("+nbPhotosRotated+" rotated) and " + nbVideosRenamed + " video(s) renamed");
 		log.debug("");
 	}
 	

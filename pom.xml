@@ -1,28 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	  	
-	<groupId>org.zephir.photorenamer</groupId> 
+
+	<groupId>org.zephir.photorenamer</groupId>
 	<artifactId>PhotoRenamer</artifactId>
-	<version>1.5.6</version>
+	<version>1.5.7</version>
 	<packaging>jar</packaging>
 	<name>ProjectRenamer</name>
 	<description>ProjectRenamer</description>
-	
+
 	<properties>
 		<project.build.sourceEncoding>Cp1252</project.build.sourceEncoding>
 		<compiler.version>1.6</compiler.version>
 	</properties>
-	
+
 	<!-- Required configuration for mvn deploy -->
 	<!--distributionManagement>
 		<repository>
-			<id>blabla-local</id>
-			<url>http://blablabla/blabla-local</url>
+		<id>blabla-local</id>
+		<url>http://blablabla/blabla-local</url>
 		</repository>
-	</distributionManagement-->
+		</distributionManagement -->
 
 	<developers>
 		<developer>
@@ -34,21 +32,21 @@
 				<role>developer</role>
 			</roles>
 		</developer>
-	</developers>	
-	
+	</developers>
+
 	<repositories>
-		<repository>
+		<!-- repository>
 			<id>Version99</id>
 			<name>Version 99 Does Not Exist Maven repository</name>
 			<layout>default</layout>
 			<url>http://no-commons-logging.zapto.org/mvn2</url>
-		</repository>
+			</repository -->
 		<repository>
 			<id>central</id>
 			<url>http://repo1.maven.org/maven2/</url>
 		</repository>
 	</repositories>
-	
+
 	<dependencies>
 		<dependency>
 			<groupId>commons-lang</groupId>
@@ -64,7 +62,7 @@
 			<groupId>commons-collections</groupId>
 			<artifactId>commons-collections</artifactId>
 			<version>3.2.1</version>
-		</dependency-->
+			</dependency -->
 		<dependency>
 			<groupId>net.sourceforge.collections</groupId>
 			<artifactId>collections-generic</artifactId>
@@ -85,11 +83,18 @@
 			<artifactId>log4j</artifactId>
 			<version>1.2.16</version>
 		</dependency>
-		<dependency>
+		<!-- dependency>
 			<groupId>commons-logging</groupId>
 			<artifactId>commons-logging</artifactId>
 			<version>99.0-does-not-exist</version>
+			</dependency -->
+		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+			<version>1.1.1</version>
+			<scope>provided</scope>
 		</dependency>
+
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>jcl-over-slf4j</artifactId>
@@ -111,7 +116,7 @@
 			<artifactId>xmpcore</artifactId>
 			<version>5.1.2-mod</version>
 		</dependency>
-		
+
 		<!-- no public repository found, see file mvn_repo_special_jars.zip -->
 		<dependency>
 			<groupId>org.eclipse</groupId>
@@ -123,7 +128,7 @@
 			<artifactId>swt_macosx_x86</artifactId>
 			<version>3.6.2</version>
 			<scope>provided</scope>
-		</dependency -->
+			</dependency -->
 		<dependency>
 			<groupId>mediachest</groupId>
 			<artifactId>mediautil</artifactId>
@@ -139,6 +144,17 @@
 			<artifactId>metadata-extractor</artifactId>
 			<version>2.6.4</version>
 		</dependency>
+
+		<dependency>
+			<groupId>com.twelvemonkeys.imageio</groupId>
+			<artifactId>imageio-jpeg</artifactId>
+			<version>3.2.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.twelvemonkeys.imageio</groupId>
+			<artifactId>imageio-tiff</artifactId>
+			<version>3.2.1</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -149,7 +165,7 @@
 				<configuration>
 					<!-- descriptorRefs>
 						<descriptorRef>jar-with-dependencies</descriptorRef>
-					</descriptorRefs -->
+						</descriptorRefs -->
 					<descriptors>
 						<descriptor>src/main/assembly/assembly.xml</descriptor>
 					</descriptors>
@@ -164,15 +180,15 @@
 				</configuration>
 				<executions>
 					<execution>
-					<id>make-assembly</id>
-					<phase>package</phase>
-					<goals>
-						<goal>single</goal>
-					</goals>
+						<id>make-assembly</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
 					</execution>
 				</executions>
 			</plugin>
-			
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>

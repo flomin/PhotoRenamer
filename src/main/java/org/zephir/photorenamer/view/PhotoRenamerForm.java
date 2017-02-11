@@ -24,9 +24,9 @@ import org.zephir.photorenamer.core.PhotoRenamerConstants;
 import org.zephir.photorenamer.core.PhotoRenamerCore;
 import org.zephir.util.ConsoleFormAppender;
 
-public class PhotoRenamerForm {
+public class PhotoRenamerForm implements PhotoRenamerConstants {
 	private static Logger log = null;
-	private Shell sShell = null;  //  @jve:decl-index=0:visual-constraint="10,10"
+	private Shell sShell = null; // @jve:decl-index=0:visual-constraint="10,10"
 	private Label labelInputFolder = null;
 	private Text textInputFolder = null;
 	private Button buttonInputFolder = null;
@@ -40,18 +40,18 @@ public class PhotoRenamerForm {
 	private Button checkboxRenameExtra = null;
 	private Button checkboxRotateImage = null;
 	private Button buttonHelp = null;
-	
+
 	public static void main(final String[] args) {
 		final Display display = (Display) SWTLoader.getDisplay();
 		display.syncExec(new Runnable() {
 			@Override
 			public void run() {
 				log = Logger.getLogger(PhotoRenamerForm.class);
-				
+
 				PhotoRenamerForm thisClass = new PhotoRenamerForm();
 				thisClass.createSShell();
 				thisClass.sShell.open();
-				
+
 				while (!thisClass.sShell.isDisposed()) {
 					if (!display.readAndDispatch()) {
 						display.sleep();
@@ -61,7 +61,7 @@ public class PhotoRenamerForm {
 			}
 		});
 	}
-	
+
 	private void loadPreferences() {
 		try {
 			if (new File("PhotoRenamer.properties").exists()) {
@@ -69,7 +69,7 @@ public class PhotoRenamerForm {
 				FileInputStream in = new FileInputStream("PhotoRenamer.properties");
 				props.load(in);
 				in.close();
-				
+
 				String inputFolder = props.getProperty("inputFolder");
 				if (inputFolder != null) {
 					textInputFolder.setText(inputFolder);
@@ -96,10 +96,10 @@ public class PhotoRenamerForm {
 				}
 			}
 		} catch (IOException e) {
-			log.error("loadPreferences() KO: "+e, e);
+			log.error("loadPreferences() KO: " + e, e);
 		}
 	}
-	
+
 	private void savePreferences() {
 		try {
 			Properties props = new Properties();
@@ -112,17 +112,15 @@ public class PhotoRenamerForm {
 			FileOutputStream out = new FileOutputStream("PhotoRenamer.properties");
 			props.store(out, "---No Comment---");
 			out.close();
-			
+
 		} catch (IOException e) {
-			log.error("savePreferences() KO: "+e, e);
+			log.error("savePreferences() KO: " + e, e);
 		}
 	}
 
-	
 	private void createSShell() {
 		sShell = new Shell((Display) SWTLoader.getDisplay(), SWT.CLOSE | SWT.TITLE | SWT.MIN | SWT.MAX);
-		sShell.setText("PhotoRenamer by wInd v" + PhotoRenamerConstants.VERSION);
-		sShell.setSize(new Point(530, 160));
+		sShell.setText("PhotoRenamer by wInd v" + VERSION);
 		sShell.setImage(new Image(Display.getCurrent(), getClass().getResourceAsStream("/skull2-16x16.gif")));
 		sShell.setLayout(null);
 		sShell.addShellListener(new org.eclipse.swt.events.ShellAdapter() {
@@ -132,17 +130,18 @@ public class PhotoRenamerForm {
 				ConsoleFormAppender.closeAll();
 			}
 		});
-		
+
+		int y = FORM_LINE_SPACE;
 		labelInputFolder = new Label(sShell, SWT.HORIZONTAL);
-		labelInputFolder.setText("Input folder:   ");
-		labelInputFolder.setBounds(new Rectangle(3, 3, 100, 19));
+		labelInputFolder.setText("Input folder :");
+		labelInputFolder.setBounds(new Rectangle(3, y + FORM_LABEL_DELTA, FORM_LINE_TAB, FORM_LINE_HEIGHT));
 		textInputFolder = new Text(sShell, SWT.BORDER);
-		textInputFolder.setText(PhotoRenamerConstants.USER_DIR);
-		textInputFolder.setBounds(new Rectangle(105, 2, 380, 19));
+		textInputFolder.setText(USER_DIR);
+		textInputFolder.setBounds(new Rectangle(FORM_LINE_TAB + FORM_LINE_SPACE, y, 450, FORM_LINE_HEIGHT));
 		textInputFolder.setTextLimit(655);
 		buttonInputFolder = new Button(sShell, SWT.NONE);
 		buttonInputFolder.setText("...");
-		buttonInputFolder.setBounds(new Rectangle(490, 2, 17, 19));
+		buttonInputFolder.setBounds(new Rectangle(560, y, 29, FORM_LINE_HEIGHT));
 		buttonInputFolder.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(final Event event) {
@@ -154,61 +153,68 @@ public class PhotoRenamerForm {
 				}
 			}
 		});
-		
+
+		y += FORM_LINE_HEIGHT + FORM_LINE_SPACE;
 		labelSuffix = new Label(sShell, SWT.NONE);
-		labelSuffix.setText("Photo suffix:  ");
-		labelSuffix.setBounds(new Rectangle(3, 23, 100, 19));
+		labelSuffix.setText("Photo suffix :");
+		labelSuffix.setBounds(new Rectangle(3, y + FORM_LABEL_DELTA, FORM_LINE_TAB, FORM_LINE_HEIGHT));
 		textSuffix = new Text(sShell, SWT.BORDER);
 		textSuffix.setText("");
-		textSuffix.setBounds(new Rectangle(105, 22, 200, 19));
-		
+		textSuffix.setBounds(new Rectangle(FORM_LINE_TAB + FORM_LINE_SPACE, y, 200, FORM_LINE_HEIGHT));
+
+		y += FORM_LINE_HEIGHT + FORM_LINE_SPACE;
 		labelDelta = new Label(sShell, SWT.NONE);
-		labelDelta.setText("Delta:  ");
-		labelDelta.setBounds(new Rectangle(3, 43, 100, 19));
+		labelDelta.setText("Delta :");
+		labelDelta.setBounds(new Rectangle(3, y + FORM_LABEL_DELTA, FORM_LINE_TAB, FORM_LINE_HEIGHT));
 		textDelta = new Text(sShell, SWT.BORDER);
 		textDelta.setText("0s");
-		textDelta.setBounds(new Rectangle(105, 42, 200, 19));
-		
+		textDelta.setBounds(new Rectangle(FORM_LINE_TAB + FORM_LINE_SPACE, y, 200, FORM_LINE_HEIGHT));
+
+		y += FORM_LINE_HEIGHT + FORM_LINE_SPACE;
 		labelPattern = new Label(sShell, SWT.NONE);
-		labelPattern.setText("Date pattern:  ");
-		labelPattern.setBounds(new Rectangle(3, 63, 100, 19));
+		labelPattern.setText("Date pattern :");
+		labelPattern.setBounds(new Rectangle(3, y + FORM_LABEL_DELTA, FORM_LINE_TAB, FORM_LINE_HEIGHT));
 		textPattern = new Text(sShell, SWT.BORDER);
-		textPattern.setText(PhotoRenamerConstants.DEFAULT_PATTERN);
-		textPattern.setBounds(new Rectangle(105, 62, 200, 19));
-		
-		checkboxRenameExtra = new Button(sShell, SWT.CHECK);
-		checkboxRenameExtra.setText("Rename extra files");
-		checkboxRenameExtra.setSelection(true);
-		checkboxRenameExtra.setBounds(new Rectangle(3, 83, 200, 19));
-		
-		checkboxRotateImage = new Button(sShell, SWT.CHECK);
-		checkboxRotateImage.setText("Rotate images");
-		checkboxRotateImage.setSelection(true);
-		checkboxRotateImage.setBounds(new Rectangle(3, 103, 200, 19));
-		
+		textPattern.setText(DEFAULT_PATTERN);
+		textPattern.setBounds(new Rectangle(FORM_LINE_TAB + FORM_LINE_SPACE, y, 200, FORM_LINE_HEIGHT));
+
 		buttonProceed = new Button(sShell, SWT.NONE);
 		buttonProceed.setText("Proceed !");
-		buttonProceed.setBounds(new Rectangle(386, 51, 119, 29));
+		buttonProceed.setBounds(new Rectangle(386, y, 119, FORM_BUTTON_HEIGHT));
 		buttonProceed.addMouseListener(new org.eclipse.swt.events.MouseAdapter() {
 			@Override
 			public void mouseDown(final org.eclipse.swt.events.MouseEvent e) {
 				proceed();
 			}
 		});
-		
+
 		buttonHelp = new Button(sShell, SWT.NONE);
 		buttonHelp.setText(" ? ");
-		buttonHelp.setBounds(new Rectangle(355, 51, 29, 29));
+		buttonHelp.setBounds(new Rectangle(355, y, 29, FORM_BUTTON_HEIGHT));
 		buttonHelp.addMouseListener(new org.eclipse.swt.events.MouseAdapter() {
-					@Override
-					public void mouseDown(final org.eclipse.swt.events.MouseEvent e) {
-						openHelpDialog("Help - PhotoRenamer", PhotoRenamerConstants.FORM_HELP);
-					}
-				});
-		
+			@Override
+			public void mouseDown(final org.eclipse.swt.events.MouseEvent e) {
+				openHelpDialog("Help - PhotoRenamer", FORM_HELP);
+			}
+		});
+
+		y += FORM_LINE_HEIGHT + FORM_LINE_SPACE;
+		checkboxRenameExtra = new Button(sShell, SWT.CHECK);
+		checkboxRenameExtra.setText("Rename extra files");
+		checkboxRenameExtra.setSelection(true);
+		checkboxRenameExtra.setBounds(new Rectangle(3, y, 200, FORM_LINE_HEIGHT));
+
+		y += FORM_LINE_HEIGHT + FORM_LINE_SPACE;
+		checkboxRotateImage = new Button(sShell, SWT.CHECK);
+		checkboxRotateImage.setText("Rotate images");
+		checkboxRotateImage.setSelection(true);
+		checkboxRotateImage.setBounds(new Rectangle(3, y, 200, FORM_LINE_HEIGHT));
+
+		y += (FORM_LINE_HEIGHT + FORM_LINE_SPACE) * 2;
+		sShell.setSize(new Point(600, y));
 		loadPreferences();
 	}
-	
+
 	private void openHelpDialog(final String title, final String text) {
 		MessageBox mb = new MessageBox(sShell, SWT.OK | SWT.ICON_QUESTION);
 		mb.setText(title);
@@ -227,17 +233,22 @@ public class PhotoRenamerForm {
 			core.setDelta(textDelta.getText());
 			core.setRenameExtraFiles(checkboxRenameExtra.getSelection());
 			core.setRotateImages(checkboxRotateImage.getSelection());
-			
+
 			Runnable runnable = new Runnable() {
 				@Override
 				public void run() {
 					try {
 						// show console
 						ConsoleFormAppender.focus();
-						
+
 						// process
 						core.processFolder();
+
+					} catch (Exception e) {
+						e.printStackTrace();
+						log.debug("Exception: " + e.toString());
 						
+					} finally {
 						// processing finished
 						Display.getDefault().syncExec(new Runnable() {
 							@Override
@@ -245,9 +256,6 @@ public class PhotoRenamerForm {
 								buttonProceed.setEnabled(true);
 							}
 						});
-					} catch (Exception e) {
-						e.printStackTrace();
-						log.debug("Exception: " + e.toString());
 					}
 				}
 			};
