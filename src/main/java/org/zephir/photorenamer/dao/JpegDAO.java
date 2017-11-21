@@ -134,7 +134,7 @@ public final class JpegDAO {
 					// EXIF spec: https://www.media.mit.edu/pia/Research/deepview/exif.html
 
 					// Date Time Original 0x9003 DateTimeOriginal - Exif SubIFD
-					if (removeFieldIfExists || exifDirectory.findField(ExifTagConstants.EXIF_TAG_DATE_TIME_ORIGINAL) == null) {
+					if (removeFieldIfExists || outputSet.findField(ExifTagConstants.EXIF_TAG_DATE_TIME_ORIGINAL) == null) {
 						TiffOutputField dateTimeOriginalField = new TiffOutputField(ExifTagConstants.EXIF_TAG_DATE_TIME_ORIGINAL, FieldType.FIELD_TYPE_ASCII,
 								asciiTiffDate.length(), asciiTiffDate.getBytes());
 						outputSet.removeField(ExifTagConstants.EXIF_TAG_DATE_TIME_ORIGINAL);
@@ -143,7 +143,7 @@ public final class JpegDAO {
 					}
 
 					// Create Date 0x9004 DateTimeDigitized - Exif SubIFD
-					if (removeFieldIfExists || exifDirectory.findField(ExifTagConstants.EXIF_TAG_CREATE_DATE) == null) {
+					if (removeFieldIfExists || outputSet.findField(ExifTagConstants.EXIF_TAG_CREATE_DATE) == null) {
 						TiffOutputField createDateField = new TiffOutputField(TiffConstants.EXIF_TAG_CREATE_DATE, TiffConstants.FIELD_TYPE_ASCII,
 								asciiTiffDate.length(), asciiTiffDate.getBytes());
 						outputSet.removeField(ExifTagConstants.EXIF_TAG_CREATE_DATE);
@@ -152,7 +152,7 @@ public final class JpegDAO {
 					}
 
 					// Modify date 0x0132 DateTime - IFD0 (main image)
-					if (removeFieldIfExists || rootDirectory.findField(ExifTagConstants.EXIF_TAG_MODIFY_DATE) == null) {
+					if (removeFieldIfExists || outputSet.findField(ExifTagConstants.EXIF_TAG_MODIFY_DATE) == null) {
 						TiffOutputField modifyDateField = new TiffOutputField(TiffConstants.EXIF_TAG_MODIFY_DATE, TiffConstants.FIELD_TYPE_ASCII,
 								asciiTiffDate.length(), asciiTiffDate.getBytes());
 						outputSet.removeField(ExifTagConstants.EXIF_TAG_MODIFY_DATE);
@@ -161,7 +161,7 @@ public final class JpegDAO {
 					}
 
 					// Software
-					if (exifDirectory.findField(ExifTagConstants.EXIF_TAG_SOFTWARE) == null) {
+					if (outputSet.findField(ExifTagConstants.EXIF_TAG_SOFTWARE) == null) {
 						String softwareFieldStr = "PhotoRenamer-" + PhotoRenamerConstants.VERSION;
 						TiffOutputField softwareField = new TiffOutputField(ExifTagConstants.EXIF_TAG_SOFTWARE, ExifTagConstants.FIELD_TYPE_ASCII,
 								softwareFieldStr.length(), softwareFieldStr.getBytes());
