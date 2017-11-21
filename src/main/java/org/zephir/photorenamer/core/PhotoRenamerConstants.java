@@ -7,7 +7,7 @@ import org.apache.commons.lang.StringUtils;
 
 public interface PhotoRenamerConstants {
 
-	public static final String VERSION = "1.5.7";
+	public static final String VERSION = "1.5.8";
 
 	public static final String SUFFIX_ORIGINAL_FILENAME_TOKEN = "%ori%";
 	
@@ -51,5 +51,6 @@ public interface PhotoRenamerConstants {
 		"Delta: time to add or substract from the EXIF date in seconds(s)/minutes(m)/hours(h)/days(d) (e.g.: -15s, 60m, -48h, -1d, 30d3h-15s)\n" +
 		"Date pattern: format of the date (y: year M: month, d: day, H: hour, m: min, s: sec)\n" +
 		"Rename extra files: whether the extra files should be renamed too based on their creation date (" + StringUtils.join(FILES_TO_RENAME_EXTENSION_LIST, ", ") + ")\n" +
-		"Rotate images: auto rotation of the images based on the EXIF orientation\n";
+		"Rotate images: auto rotation of the images based on the EXIF orientation\n" +
+		"Set absent Exif date from filename if possible: if no EXIF date, then try to read filename to set date and rename using suffix\n";
 }

@@ -21,16 +21,17 @@ public class PhotoRenamerTest {
 	@After
 	public void tearDown() {}
 
-//	@Test
-//	public void testScalene() throws Exception {
-//		final PhotoRenamerCore core = new PhotoRenamerCore();
-//		core.setFolderToProcess("C:\\wind\\Boulot\\Java\\PhotoRenamer-git\\src\\test\\resources\\Fift\\");
-//		core.setSuffix("");
-//		core.setPattern(PhotoRenamerConstants.DEFAULT_PATTERN);
-//		core.setDelta("");
-//		core.setRenameExtraFiles(true);
-//		core.setRotateImages(true);
-//		
-//		core.processFolder();
-//	}
+	@Test
+	public void testScalene() throws Exception {
+		final PhotoRenamerCore core = new PhotoRenamerCore();
+		core.setFolderToProcess("C:\\wind\\Boulot\\Java\\PhotoRenamer\\src\\test\\resources\\test\\");
+		core.setSuffix("");
+		core.setPattern(PhotoRenamerConstants.DEFAULT_PATTERN);
+		core.setDelta("");
+		core.setRenameExtraFiles(true);
+		core.setRotateImages(true);
+		core.setRetroDateExif(true);
+		
+		core.processFolder();
+	}
 }

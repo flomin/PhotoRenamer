@@ -1,0 +1,4 @@
+ - method getting original EXIF date improved to look for DateTimeOriginal > DateTimeDigitized > ModifyDate (and missing dates are added)
+ - if no date EXIF found, option to parse the filename and set the EXIF date
+ - console font monospaced
+ - console size adapt to line size

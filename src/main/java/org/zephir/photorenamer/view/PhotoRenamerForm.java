@@ -39,6 +39,7 @@ public class PhotoRenamerForm implements PhotoRenamerConstants {
 	private Button buttonProceed = null;
 	private Button checkboxRenameExtra = null;
 	private Button checkboxRotateImage = null;
+	private Button checkboxRetroDateExif = null;
 	private Button buttonHelp = null;
 
 	public static void main(final String[] args) {
@@ -92,7 +93,11 @@ public class PhotoRenamerForm implements PhotoRenamerConstants {
 				}
 				String rotateImage = props.getProperty("rotateImage");
 				if (rotateImage != null) {
-					checkboxRotateImage.setSelection(renameVideo.equalsIgnoreCase("true"));
+					checkboxRotateImage.setSelection(rotateImage.equalsIgnoreCase("true"));
+				}
+				String retroDateExif = props.getProperty("retroDateExif");
+				if (retroDateExif != null) {
+					checkboxRetroDateExif.setSelection(retroDateExif.equalsIgnoreCase("true"));
 				}
 			}
 		} catch (IOException e) {
@@ -109,6 +114,7 @@ public class PhotoRenamerForm implements PhotoRenamerConstants {
 			props.setProperty("pattern", textPattern.getText());
 			props.setProperty("renameVideo", checkboxRenameExtra.getSelection() ? "true" : "false");
 			props.setProperty("rotateImage", checkboxRotateImage.getSelection() ? "true" : "false");
+			props.setProperty("retroDateExif", checkboxRetroDateExif.getSelection() ? "true" : "false");
 			FileOutputStream out = new FileOutputStream("PhotoRenamer.properties");
 			props.store(out, "---No Comment---");
 			out.close();
@@ -210,6 +216,12 @@ public class PhotoRenamerForm implements PhotoRenamerConstants {
 		checkboxRotateImage.setSelection(true);
 		checkboxRotateImage.setBounds(new Rectangle(3, y, 200, FORM_LINE_HEIGHT));
 
+		y += FORM_LINE_HEIGHT + FORM_LINE_SPACE;
+		checkboxRetroDateExif = new Button(sShell, SWT.CHECK);
+		checkboxRetroDateExif.setText("Set absent Exif date from filename if possible");
+		checkboxRetroDateExif.setSelection(true);
+		checkboxRetroDateExif.setBounds(new Rectangle(3, y, 400, FORM_LINE_HEIGHT));
+		
 		y += (FORM_LINE_HEIGHT + FORM_LINE_SPACE) * 2;
 		sShell.setSize(new Point(600, y));
 		loadPreferences();
@@ -233,6 +245,7 @@ public class PhotoRenamerForm implements PhotoRenamerConstants {
 			core.setDelta(textDelta.getText());
 			core.setRenameExtraFiles(checkboxRenameExtra.getSelection());
 			core.setRotateImages(checkboxRotateImage.getSelection());
+			core.setRetroDateExif(checkboxRetroDateExif.getSelection());
 
 			Runnable runnable = new Runnable() {
 				@Override

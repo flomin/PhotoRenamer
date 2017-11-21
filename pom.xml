@@ -1,26 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.zephir.photorenamer</groupId>
 	<artifactId>PhotoRenamer</artifactId>
-	<version>1.5.7</version>
+	<version>1.5.8</version>
 	<packaging>jar</packaging>
 	<name>ProjectRenamer</name>
 	<description>ProjectRenamer</description>
 
 	<properties>
 		<project.build.sourceEncoding>Cp1252</project.build.sourceEncoding>
-		<compiler.version>1.6</compiler.version>
+		<compiler.version>1.8</compiler.version>
 	</properties>
 
 	<!-- Required configuration for mvn deploy -->
-	<!--distributionManagement>
-		<repository>
-		<id>blabla-local</id>
-		<url>http://blablabla/blabla-local</url>
-		</repository>
-		</distributionManagement -->
+	<!--distributionManagement> <repository> <id>blabla-local</id> <url>http://blablabla/blabla-local</url> 
+		</repository> </distributionManagement -->
 
 	<developers>
 		<developer>
@@ -35,11 +32,8 @@
 	</developers>
 
 	<repositories>
-		<!-- repository>
-			<id>Version99</id>
-			<name>Version 99 Does Not Exist Maven repository</name>
-			<layout>default</layout>
-			<url>http://no-commons-logging.zapto.org/mvn2</url>
+		<!-- repository> <id>Version99</id> <name>Version 99 Does Not Exist Maven 
+			repository</name> <layout>default</layout> <url>http://no-commons-logging.zapto.org/mvn2</url> 
 			</repository -->
 		<repository>
 			<id>central</id>
@@ -58,11 +52,8 @@
 			<artifactId>commons-io</artifactId>
 			<version>1.4</version>
 		</dependency>
-		<!--dependency>
-			<groupId>commons-collections</groupId>
-			<artifactId>commons-collections</artifactId>
-			<version>3.2.1</version>
-			</dependency -->
+		<!--dependency> <groupId>commons-collections</groupId> <artifactId>commons-collections</artifactId> 
+			<version>3.2.1</version> </dependency -->
 		<dependency>
 			<groupId>net.sourceforge.collections</groupId>
 			<artifactId>collections-generic</artifactId>
@@ -83,11 +74,8 @@
 			<artifactId>log4j</artifactId>
 			<version>1.2.16</version>
 		</dependency>
-		<!-- dependency>
-			<groupId>commons-logging</groupId>
-			<artifactId>commons-logging</artifactId>
-			<version>99.0-does-not-exist</version>
-			</dependency -->
+		<!-- dependency> <groupId>commons-logging</groupId> <artifactId>commons-logging</artifactId> 
+			<version>99.0-does-not-exist</version> </dependency -->
 		<dependency>
 			<groupId>commons-logging</groupId>
 			<artifactId>commons-logging</artifactId>
@@ -111,6 +99,9 @@
 			<artifactId>sanselan</artifactId>
 			<version>0.97-incubator</version>
 		</dependency>
+		<!-- renamed to https://commons.apache.org/proper/commons-imaging/ but 
+			not yet released... <dependency> <groupId>org.apache.commons</groupId> <artifactId>commons-imaging</artifactId> 
+			<version>1.0-R1534292</version> </dependency -->
 		<dependency>
 			<groupId>com.adobe.xmp</groupId>
 			<artifactId>xmpcore</artifactId>
@@ -123,12 +114,8 @@
 			<artifactId>swt_win32_x86</artifactId>
 			<version>3.6.2</version>
 		</dependency>
-		<!-- dependency>
-			<groupId>org.eclipse</groupId>
-			<artifactId>swt_macosx_x86</artifactId>
-			<version>3.6.2</version>
-			<scope>provided</scope>
-			</dependency -->
+		<!-- dependency> <groupId>org.eclipse</groupId> <artifactId>swt_macosx_x86</artifactId> 
+			<version>3.6.2</version> <scope>provided</scope> </dependency -->
 		<dependency>
 			<groupId>mediachest</groupId>
 			<artifactId>mediautil</artifactId>
@@ -139,11 +126,11 @@
 			<artifactId>jar-in-jar-loader</artifactId>
 			<version>3.6.1</version>
 		</dependency>
-		<dependency>
+		<!-- dependency>
 			<groupId>com.drewnoakes</groupId>
 			<artifactId>metadata-extractor</artifactId>
 			<version>2.6.4</version>
-		</dependency>
+		</dependency -->
 
 		<dependency>
 			<groupId>com.twelvemonkeys.imageio</groupId>
@@ -163,8 +150,7 @@
 				<artifactId>maven-assembly-plugin</artifactId>
 				<version>2.2.1</version>
 				<configuration>
-					<!-- descriptorRefs>
-						<descriptorRef>jar-with-dependencies</descriptorRef>
+					<!-- descriptorRefs> <descriptorRef>jar-with-dependencies</descriptorRef> 
 						</descriptorRefs -->
 					<descriptors>
 						<descriptor>src/main/assembly/assembly.xml</descriptor>
