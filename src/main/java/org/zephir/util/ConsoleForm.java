@@ -92,10 +92,10 @@ public class ConsoleForm {
 						}
 						cf.sShell.setVisible(true);
 						
-						// resize window
+						// resize window if needed
 						sShell.layout(true, true);
 						final Point newSize = sShell.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);  
-						sShell.setSize(newSize);
+						sShell.setSize(newSize.x, sShell.getSize().y);
 					}
 				});
 			}

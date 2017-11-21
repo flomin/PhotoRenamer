@@ -89,7 +89,7 @@ public final class JpegDAO {
 					} else if (modifyDateField != null) {
 						date = EXIF_DATE_FORMAT.parse(modifyDateField.getStringValue());
 					}
-					if (dateTimeOriginalField == null || createDateField == null || modifyDateField == null) {
+					if (date != null && (dateTimeOriginalField == null || createDateField == null || modifyDateField == null)) {
 						boolean workDone = setDateTimeOriginal(file, date, false);
 						if (workDone) {
 							log.debug(PhotoRenamerCore.logPrefix + "'" + file.getAbsolutePath() + "' ---> missing EXIF date(s) added");

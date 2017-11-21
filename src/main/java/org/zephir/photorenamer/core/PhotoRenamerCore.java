@@ -1,6 +1,7 @@
 package org.zephir.photorenamer.core;
 
 import java.io.File;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
@@ -138,7 +139,7 @@ public class PhotoRenamerCore {
 				// try set EXIF -> filename
 				newFile = renameFile(f, originalDate);
 			} else {
-				log.warn(logPrefix + "Can't rename photo '" + f.getAbsoluteFile() + "': No EXIF data.");
+				log.warn(logPrefix + "Can't rename photo '" + f.getAbsoluteFile() + "': No date found.");
 			}
 			return newFile;
 		} catch (CustomException e) {
@@ -170,9 +171,13 @@ public class PhotoRenamerCore {
 
 			// get date from filename
 			SimpleDateFormat sdf = new SimpleDateFormat(getPattern());
-			Date filenameDate = sdf.parse(filename);
+			Date filenameDate = null;
+			try {
+				filenameDate = sdf.parse(filename);
+			} catch (ParseException e) {
+			}
 			if (filenameDate == null) {
-				log.warn(logPrefix + "Can't get photo date EXIF not filename: '" + f.getAbsoluteFile() + "'");
+				log.warn(logPrefix + "Can't get photo date from EXIF nor filename: '" + f.getAbsoluteFile() + "'");
 
 			} else {
 				// match EXIF with other files delta (in order to reproduce)
