@@ -15,7 +15,20 @@ import org.zephir.util.RETokenizer;
 import org.zephir.util.exception.CustomException;
 
 public class PhotoRenamerCore {
+	// ===========================================================
+	// Constants
+	// ===========================================================
 	private static Logger log = LoggerFactory.getLogger(PhotoRenamerCore.class);
+
+	private static final boolean SHOW_TIME_ON_LOG = false;
+
+	private static String logPrefix;
+	private static long timeStart;
+
+	// ===========================================================
+	// Fields
+	// ===========================================================
+
 	private File folderToProcess;
 	private String pattern;
 	private String suffix;
@@ -24,11 +37,20 @@ public class PhotoRenamerCore {
 	private boolean rotateImages = false;
 	private boolean retroDateExif = false;
 
-	private static String logPrefix;
-	private static long timeStart;
+	// ===========================================================
+	// Constructors
+	// ===========================================================
 
 	public PhotoRenamerCore() {
 	}
+
+	// ===========================================================
+	// Methods for/from SuperClass/Interfaces
+	// ===========================================================
+
+	// ===========================================================
+	// Methods
+	// ===========================================================
 
 	public void processFolder() throws CustomException {
 		if (!getFolderToProcess().exists()) {
@@ -64,7 +86,9 @@ public class PhotoRenamerCore {
 				log.debug(getLogPrefix() + "file deleted: '" + f.getAbsolutePath() + "'");
 			} else {
 				if (f.isFile()) {
-					timeStart = System.currentTimeMillis();
+					if (SHOW_TIME_ON_LOG) {
+						timeStart = System.currentTimeMillis();
+					}
 					// file
 					if (isFileExtensionInList(f, PhotoRenamerConstants.FILES_WITH_METADATA_EXTENSION_LIST)) {
 						try {
@@ -107,8 +131,12 @@ public class PhotoRenamerCore {
 	}
 
 	public static String getLogPrefix() {
-		long time = System.currentTimeMillis() - timeStart;
-		return logPrefix + "(" + time + "ms) ";
+		String prefix = logPrefix;
+		if (SHOW_TIME_ON_LOG) {
+			long time = System.currentTimeMillis() - timeStart;
+			prefix += "(" + time + "ms) ";
+		}
+		return prefix;
 	}
 
 	private boolean isFileExtensionInList(final File f, final List<String> extensionList) {
@@ -243,6 +271,10 @@ public class PhotoRenamerCore {
 		}
 	}
 
+	// ===========================================================
+	// Getter & Setter
+	// ===========================================================
+
 	public File getFolderToProcess() {
 		if (folderToProcess == null) {
 			folderToProcess = new File(PhotoRenamerConstants.USER_DIR);
@@ -329,4 +361,8 @@ public class PhotoRenamerCore {
 	public void setRetroDateExif(boolean retroDateExif) {
 		this.retroDateExif = retroDateExif;
 	}
+
+	// ===========================================================
+	// Inner and Anonymous Classes
+	// ===========================================================
 }

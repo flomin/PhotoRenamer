@@ -4,9 +4,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.log4j.Level;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ST;
 import org.eclipse.swt.custom.StyleRange;
@@ -20,12 +23,32 @@ import org.eclipse.swt.widgets.Shell;
 import org.zephir.photorenamer.view.SWTLoader;
 
 public class ConsoleForm {
+	// ===========================================================
+	// Constants
+	// ===========================================================
+
+	private static boolean showOnFirstLog = true;
+	private static boolean shownOnFirstLog = false;
+
+	@SuppressWarnings("serial")
+	public final Map<Level, ConsoleLineStyle> levelToStyleMap = new HashMap<Level, ConsoleLineStyle>() {
+		{
+			put(Level.WARN, new ConsoleLineStyle(SWT.BOLD, SWT.COLOR_YELLOW));
+			put(Level.ERROR, new ConsoleLineStyle(SWT.BOLD, SWT.COLOR_RED));
+			put(Level.FATAL, new ConsoleLineStyle(SWT.BOLD, SWT.COLOR_RED));
+		}
+	};
+
+	// ===========================================================
+	// Fields
+	// ===========================================================
 
 	private Shell sShell; // @jve:decl-index=0:visual-constraint="29,10"
 	private StyledText textArea = null;
 
-	private static boolean showOnFirstLog = true;
-	private static boolean shownOnFirstLog = false;
+	// ===========================================================
+	// Constructors
+	// ===========================================================
 
 	public ConsoleForm() {
 		super();
@@ -39,6 +62,14 @@ public class ConsoleForm {
 			});
 		}
 	}
+
+	// ===========================================================
+	// Methods for/from SuperClass/Interfaces
+	// ===========================================================
+
+	// ===========================================================
+	// Methods
+	// ===========================================================
 
 	/**
 	 * This method initializes sShell
@@ -58,14 +89,14 @@ public class ConsoleForm {
 			}
 		});
 
-		textArea = new StyledText(sShell, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL | SWT.READ_ONLY);
+		textArea = new StyledText(sShell, SWT.MULTI | SWT.V_SCROLL | SWT.READ_ONLY); // line wrapping is too slow on large text | SWT.WRAP 
 		// Choose a monospaced font
 		textArea.setFont(SWTFontUtils.getMonospacedFont(sShell.getDisplay()));
 		textArea.setBackground(sShell.getDisplay().getSystemColor(SWT.COLOR_TITLE_INACTIVE_BACKGROUND_GRADIENT));
 		textArea.setEditable(false);
 	}
 
-	public void println(final String str, final boolean inError) {
+	public void println(final List<ConsoleLine> lines) {
 		final ConsoleForm cf = this;
 
 		if (sShell != null) {
@@ -73,29 +104,33 @@ public class ConsoleForm {
 				sShell.getDisplay().asyncExec(new Runnable() {
 					@Override
 					public void run() {
-						String line = str + textArea.getLineDelimiter();
+						for (ConsoleLine line : lines) {
+							String lineStr = line.getLine() + textArea.getLineDelimiter();
 
-						// if (line.toLowerCase().indexOf("exception") != -1
-						// || line.toLowerCase().indexOf("error") != -1
-						// || line.toLowerCase().indexOf("problem") != -1) {
-						if (inError) {
-							StyleRange styleRange = new StyleRange();
-							styleRange.fontStyle = SWT.BOLD;
-							styleRange.foreground = sShell.getDisplay().getSystemColor(SWT.COLOR_RED);
-							styleRange.start = textArea.getText().length();
-							styleRange.length = line.length();
-							textArea.append(line);
-							textArea.setStyleRange(styleRange);
-						} else {
-							textArea.append(line);
-							textArea.invokeAction(ST.TEXT_END);
+							ConsoleLineStyle lineStyle = levelToStyleMap.get(line.getLevel());
+							if (lineStyle != null) {
+								StyleRange styleRange = new StyleRange();
+								styleRange.fontStyle = lineStyle.getFontStyle();
+								styleRange.foreground = sShell.getDisplay().getSystemColor(lineStyle.getFontForeground());
+								styleRange.start = textArea.getText().length();
+								styleRange.length = lineStr.length();
+								textArea.append(lineStr);
+								textArea.setStyleRange(styleRange);
+							} else {
+								textArea.append(lineStr);
+								textArea.invokeAction(ST.TEXT_END);
+							}
+							cf.sShell.setVisible(true);
 						}
-						cf.sShell.setVisible(true);
-						
+
+						// compute new size if needed
+						final Point newSize = sShell.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
+						if (sShell.getSize().x < newSize.x) {
+							sShell.setSize(newSize.x, sShell.getSize().y);
+						}
+
 						// resize window if needed
 						sShell.layout(true, true);
-						final Point newSize = sShell.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);  
-						sShell.setSize(newSize.x, sShell.getSize().y);
 					}
 				});
 			}
@@ -146,5 +181,67 @@ public class ConsoleForm {
 
 	public void setVisible(final boolean visible) {
 		sShell.setVisible(visible);
+	}
+
+	// ===========================================================
+	// Getter & Setter
+	// ===========================================================
+
+	// ===========================================================
+	// Inner and Anonymous Classes
+	// ===========================================================
+
+	public static class ConsoleLine {
+		private String line;
+		private Level level;
+
+		public ConsoleLine(String line, Level level) {
+			super();
+			this.line = line;
+			this.level = level;
+		}
+
+		public String getLine() {
+			return line;
+		}
+
+		public void setLine(String line) {
+			this.line = line;
+		}
+
+		public Level getLevel() {
+			return level;
+		}
+
+		public void setLevel(Level level) {
+			this.level = level;
+		}
+	}
+
+	public static class ConsoleLineStyle {
+		private int fontStyle;
+		private int fontForeground;
+
+		public ConsoleLineStyle(int fontStyle, int fontForeground) {
+			super();
+			this.fontStyle = fontStyle;
+			this.fontForeground = fontForeground;
+		}
+
+		public int getFontStyle() {
+			return fontStyle;
+		}
+
+		public void setFontStyle(int fontStyle) {
+			this.fontStyle = fontStyle;
+		}
+
+		public int getFontForeground() {
+			return fontForeground;
+		}
+
+		public void setFontForeground(int fontForeground) {
+			this.fontForeground = fontForeground;
+		}
 	}
 }

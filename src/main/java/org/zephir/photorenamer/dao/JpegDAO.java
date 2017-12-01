@@ -43,63 +43,102 @@ import com.drew.metadata.exif.ExifSubIFDDirectory;
 import mediautil.image.jpeg.LLJTran;
 
 public final class JpegDAO {
+	// ===========================================================
+	// Constants
+	// ===========================================================
 	private static Logger log = LoggerFactory.getLogger(PhotoRenamerCore.class);
 
 	private static final SimpleDateFormat EXIF_DATE_FORMAT;
 
 	static {
 		EXIF_DATE_FORMAT = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss", Locale.US);
-		EXIF_DATE_FORMAT.setTimeZone(TimeZone.getDefault());
+		EXIF_DATE_FORMAT.setTimeZone(getTimeZone());
 	}
+
+	private static TimeZone getTimeZone() {
+		return TimeZone.getDefault();
+	}
+
+	// ===========================================================
+	// Fields
+	// ===========================================================
+
+	// ===========================================================
+	// Constructors
+	// ===========================================================
 
 	private JpegDAO() {
 	}
+
+	// ===========================================================
+	// Methods for/from SuperClass/Interfaces
+	// ===========================================================
+
+	// ===========================================================
+	// Methods
+	// ===========================================================
 
 	public static Date getDateTimeOriginal(final File file) throws CustomException {
 		try {
 			Date date = null;
 			try {
 				// try using Sanselan library
-				IImageMetadata metadata = Sanselan.getMetadata(file);
-				if (metadata instanceof JpegImageMetadata) {
-					JpegImageMetadata metaJpg = (JpegImageMetadata) metadata;
-					if (metaJpg != null) {
-						TiffField dateTimeOriginalField = metaJpg.findEXIFValue(ExifTagConstants.EXIF_TAG_DATE_TIME_ORIGINAL);
-						TiffField createDateField = metaJpg.findEXIFValue(TiffConstants.EXIF_TAG_CREATE_DATE);
-						TiffField modifyDateField = metaJpg.findEXIFValue(TiffConstants.EXIF_TAG_MODIFY_DATE);
-						if (dateTimeOriginalField != null) {
-							date = EXIF_DATE_FORMAT.parse(dateTimeOriginalField.getStringValue());
-						} else if (createDateField != null) {
-							date = EXIF_DATE_FORMAT.parse(createDateField.getStringValue());
-						} else if (modifyDateField != null) {
-							date = EXIF_DATE_FORMAT.parse(modifyDateField.getStringValue());
-						}
-						if (date != null && (dateTimeOriginalField == null || createDateField == null || modifyDateField == null)) {
-							boolean workDone = setDateTimeOriginal(file, date, false);
-							if (workDone) {
-								log.debug(PhotoRenamerCore.getLogPrefix() + "'" + file.getAbsolutePath() + "' ---> missing EXIF date(s) added");
-							}
-						}
-					}
-				}
+				date = getDateTimeOriginal_Sanselan(file);
+//				Date date2 = getDateTimeOriginal_DrewNoakes(file);
+//				if (!date.equals(date2)) {
+//					throw new IllegalStateException("date != !!");
+//				}
 			} catch (ImageReadException e) {
-				// try using drewnoakes library (read only)
-				final Metadata metadata = ImageMetadataReader.readMetadata(file);
-				final ExifSubIFDDirectory directory = metadata.getFirstDirectoryOfType(ExifSubIFDDirectory.class);
-				if (directory != null) {
-					date = directory.getDate(ExifSubIFDDirectory.TAG_DATETIME_ORIGINAL);
-					if (date == null) {
-						date = directory.getDate(ExifSubIFDDirectory.TAG_DATETIME_DIGITIZED);
-					}
-					if (date == null) {
-						date = directory.getDate(ExifIFD0Directory.TAG_DATETIME);
-					}
-				}
+				// try using drewnoakes library (read only), sanselan doesn't work well with RAW files
+				date = getDateTimeOriginal_DrewNoakes(file);
 			}
 			return date;
 		} catch (Throwable e) {
 			throw new CustomException("getDateTimeOriginal(file='" + file.getAbsolutePath() + "') KO: " + e, e);
 		}
+	}
+
+	public static Date getDateTimeOriginal_Sanselan(final File file) throws Exception {
+		Date date = null;
+		IImageMetadata metadata = Sanselan.getMetadata(file);
+		if (metadata instanceof JpegImageMetadata) {
+			JpegImageMetadata metaJpg = (JpegImageMetadata) metadata;
+			if (metaJpg != null) {
+				TiffField dateTimeOriginalField = metaJpg.findEXIFValue(ExifTagConstants.EXIF_TAG_DATE_TIME_ORIGINAL);
+				TiffField createDateField = metaJpg.findEXIFValue(TiffConstants.EXIF_TAG_CREATE_DATE);
+				TiffField modifyDateField = metaJpg.findEXIFValue(TiffConstants.EXIF_TAG_MODIFY_DATE);
+				if (dateTimeOriginalField != null) {
+					date = EXIF_DATE_FORMAT.parse(dateTimeOriginalField.getStringValue());
+				} else if (createDateField != null) {
+					date = EXIF_DATE_FORMAT.parse(createDateField.getStringValue());
+				} else if (modifyDateField != null) {
+					date = EXIF_DATE_FORMAT.parse(modifyDateField.getStringValue());
+				}
+				if (date != null && (dateTimeOriginalField == null || createDateField == null || modifyDateField == null)) {
+					boolean workDone = setDateTimeOriginal(file, date, false);
+					if (workDone) {
+						log.debug(PhotoRenamerCore.getLogPrefix() + "'" + file.getAbsolutePath() + "' ---> missing EXIF date(s) added");
+					}
+				}
+			}
+		}
+		return date;
+	}
+
+	public static Date getDateTimeOriginal_DrewNoakes(final File file) throws Exception {
+		Date date = null;
+		final Metadata metadata = ImageMetadataReader.readMetadata(file);
+		final ExifSubIFDDirectory directory = metadata.getFirstDirectoryOfType(ExifSubIFDDirectory.class);
+		if (directory != null) {
+			date = directory.getDate(ExifSubIFDDirectory.TAG_DATETIME_ORIGINAL, getTimeZone());
+			if (date == null) {
+				date = directory.getDate(ExifSubIFDDirectory.TAG_DATETIME_DIGITIZED, getTimeZone());
+			}
+			if (date == null) {
+				date = directory.getDate(ExifIFD0Directory.TAG_DATETIME, getTimeZone());
+			}
+		}
+		return date;
 	}
 
 	public static boolean setDateTimeOriginal(final File file, final Date dateFromFilename, boolean removeFieldIfExists) throws CustomException {
@@ -538,4 +577,12 @@ public final class JpegDAO {
 			throw new CustomException("splitImageVertically(file='" + file.getAbsolutePath() + "') KO: " + e, e);
 		}
 	}
+
+	// ===========================================================
+	// Getter & Setter
+	// ===========================================================
+
+	// ===========================================================
+	// Inner and Anonymous Classes
+	// ===========================================================
 }
