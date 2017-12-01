@@ -126,11 +126,11 @@
 			<artifactId>jar-in-jar-loader</artifactId>
 			<version>3.6.1</version>
 		</dependency>
-		<!-- dependency>
+		<dependency>
 			<groupId>com.drewnoakes</groupId>
 			<artifactId>metadata-extractor</artifactId>
 			<version>2.6.4</version>
-		</dependency -->
+		</dependency>
 
 		<dependency>
 			<groupId>com.twelvemonkeys.imageio</groupId>
