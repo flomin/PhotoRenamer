@@ -64,8 +64,7 @@ public final class JpegDAO {
 				if (metadata instanceof JpegImageMetadata) {
 					JpegImageMetadata metaJpg = (JpegImageMetadata) metadata;
 					if (metaJpg != null) {
-						TiffField dateTimeOriginalField = metaJpg
-								.findEXIFValue(ExifTagConstants.EXIF_TAG_DATE_TIME_ORIGINAL);
+						TiffField dateTimeOriginalField = metaJpg.findEXIFValue(ExifTagConstants.EXIF_TAG_DATE_TIME_ORIGINAL);
 						TiffField createDateField = metaJpg.findEXIFValue(TiffConstants.EXIF_TAG_CREATE_DATE);
 						TiffField modifyDateField = metaJpg.findEXIFValue(TiffConstants.EXIF_TAG_MODIFY_DATE);
 						if (dateTimeOriginalField != null) {
@@ -75,12 +74,10 @@ public final class JpegDAO {
 						} else if (modifyDateField != null) {
 							date = EXIF_DATE_FORMAT.parse(modifyDateField.getStringValue());
 						}
-						if (date != null && (dateTimeOriginalField == null || createDateField == null
-								|| modifyDateField == null)) {
+						if (date != null && (dateTimeOriginalField == null || createDateField == null || modifyDateField == null)) {
 							boolean workDone = setDateTimeOriginal(file, date, false);
 							if (workDone) {
-								log.debug(PhotoRenamerCore.logPrefix + "'" + file.getAbsolutePath()
-										+ "' ---> missing EXIF date(s) added");
+								log.debug(PhotoRenamerCore.getLogPrefix() + "'" + file.getAbsolutePath() + "' ---> missing EXIF date(s) added");
 							}
 						}
 					}
@@ -88,7 +85,7 @@ public final class JpegDAO {
 			} catch (ImageReadException e) {
 				// try using drewnoakes library (read only)
 				final Metadata metadata = ImageMetadataReader.readMetadata(file);
-				final ExifSubIFDDirectory directory = metadata.getDirectory(ExifSubIFDDirectory.class);
+				final ExifSubIFDDirectory directory = metadata.getFirstDirectoryOfType(ExifSubIFDDirectory.class);
 				if (directory != null) {
 					date = directory.getDate(ExifSubIFDDirectory.TAG_DATETIME_ORIGINAL);
 					if (date == null) {
@@ -105,8 +102,7 @@ public final class JpegDAO {
 		}
 	}
 
-	public static boolean setDateTimeOriginal(final File file, final Date dateFromFilename, boolean removeFieldIfExists)
-			throws CustomException {
+	public static boolean setDateTimeOriginal(final File file, final Date dateFromFilename, boolean removeFieldIfExists) throws CustomException {
 		try {
 			if (dateFromFilename == null) {
 				throw new NullPointerException("dateFromFilename can't be null");
@@ -138,10 +134,8 @@ public final class JpegDAO {
 					// EXIF spec: https://www.media.mit.edu/pia/Research/deepview/exif.html
 
 					// Date Time Original 0x9003 DateTimeOriginal - Exif SubIFD
-					if (removeFieldIfExists
-							|| outputSet.findField(ExifTagConstants.EXIF_TAG_DATE_TIME_ORIGINAL) == null) {
-						TiffOutputField dateTimeOriginalField = new TiffOutputField(
-								ExifTagConstants.EXIF_TAG_DATE_TIME_ORIGINAL, FieldType.FIELD_TYPE_ASCII,
+					if (removeFieldIfExists || outputSet.findField(ExifTagConstants.EXIF_TAG_DATE_TIME_ORIGINAL) == null) {
+						TiffOutputField dateTimeOriginalField = new TiffOutputField(ExifTagConstants.EXIF_TAG_DATE_TIME_ORIGINAL, FieldType.FIELD_TYPE_ASCII,
 								asciiTiffDate.length(), asciiTiffDate.getBytes());
 						outputSet.removeField(ExifTagConstants.EXIF_TAG_DATE_TIME_ORIGINAL);
 						exifDirectory.add(dateTimeOriginalField);
@@ -150,8 +144,8 @@ public final class JpegDAO {
 
 					// Create Date 0x9004 DateTimeDigitized - Exif SubIFD
 					if (removeFieldIfExists || outputSet.findField(ExifTagConstants.EXIF_TAG_CREATE_DATE) == null) {
-						TiffOutputField createDateField = new TiffOutputField(TiffConstants.EXIF_TAG_CREATE_DATE,
-								TiffConstants.FIELD_TYPE_ASCII, asciiTiffDate.length(), asciiTiffDate.getBytes());
+						TiffOutputField createDateField = new TiffOutputField(TiffConstants.EXIF_TAG_CREATE_DATE, TiffConstants.FIELD_TYPE_ASCII,
+								asciiTiffDate.length(), asciiTiffDate.getBytes());
 						outputSet.removeField(ExifTagConstants.EXIF_TAG_CREATE_DATE);
 						exifDirectory.add(createDateField);
 						workDone = true;
@@ -159,8 +153,8 @@ public final class JpegDAO {
 
 					// Modify date 0x0132 DateTime - IFD0 (main image)
 					if (removeFieldIfExists || outputSet.findField(ExifTagConstants.EXIF_TAG_MODIFY_DATE) == null) {
-						TiffOutputField modifyDateField = new TiffOutputField(TiffConstants.EXIF_TAG_MODIFY_DATE,
-								TiffConstants.FIELD_TYPE_ASCII, asciiTiffDate.length(), asciiTiffDate.getBytes());
+						TiffOutputField modifyDateField = new TiffOutputField(TiffConstants.EXIF_TAG_MODIFY_DATE, TiffConstants.FIELD_TYPE_ASCII,
+								asciiTiffDate.length(), asciiTiffDate.getBytes());
 						outputSet.removeField(ExifTagConstants.EXIF_TAG_MODIFY_DATE);
 						rootDirectory.add(modifyDateField);
 						workDone = true;
@@ -169,9 +163,8 @@ public final class JpegDAO {
 					// Software
 					if (outputSet.findField(ExifTagConstants.EXIF_TAG_SOFTWARE) == null) {
 						String softwareFieldStr = "PhotoRenamer-" + PhotoRenamerConstants.VERSION;
-						TiffOutputField softwareField = new TiffOutputField(ExifTagConstants.EXIF_TAG_SOFTWARE,
-								ExifTagConstants.FIELD_TYPE_ASCII, softwareFieldStr.length(),
-								softwareFieldStr.getBytes());
+						TiffOutputField softwareField = new TiffOutputField(ExifTagConstants.EXIF_TAG_SOFTWARE, ExifTagConstants.FIELD_TYPE_ASCII,
+								softwareFieldStr.length(), softwareFieldStr.getBytes());
 						outputSet.removeField(ExifTagConstants.EXIF_TAG_SOFTWARE);
 						rootDirectory.add(softwareField);
 					}
@@ -386,8 +379,7 @@ public final class JpegDAO {
 						// change orientation tag info
 						if (outputSet != null) {
 							outputSet.removeField(TiffConstants.TIFF_TAG_ORIENTATION);
-							TiffOutputField newOrientationField = TiffOutputField
-									.create(ExifTagConstants.EXIF_TAG_ORIENTATION, outputSet.byteOrder, 1);
+							TiffOutputField newOrientationField = TiffOutputField.create(ExifTagConstants.EXIF_TAG_ORIENTATION, outputSet.byteOrder, 1);
 							TiffOutputDirectory exifDirectory = outputSet.getOrCreateExifDirectory();
 							exifDirectory.add(newOrientationField);
 						}
@@ -523,16 +515,16 @@ public final class JpegDAO {
 
 						// draws the image chunk
 						Graphics2D gr = imgs[count++].createGraphics();
-						gr.drawImage(image, 0, 0, chunkWidth, chunkHeight, chunkWidth * y, chunkHeight * x,
-								chunkWidth * y + chunkWidth, chunkHeight * x + chunkHeight, null);
+						gr.drawImage(image, 0, 0, chunkWidth, chunkHeight, chunkWidth * y, chunkHeight * x, chunkWidth * y + chunkWidth,
+								chunkHeight * x + chunkHeight, null);
 						gr.dispose();
 					}
 				}
 
 				// writing mini images into image files
 				for (int i = 0; i < imgs.length; i++) {
-					File splitImage = new File(destinationFolder, FilenameUtils.getBaseName(file.getName()) + "_" + i
-							+ "." + FilenameUtils.getExtension(file.getName()));
+					File splitImage = new File(destinationFolder,
+							FilenameUtils.getBaseName(file.getName()) + "_" + i + "." + FilenameUtils.getExtension(file.getName()));
 					ImageIO.write(imgs[i], "jpg", splitImage);
 				}
 

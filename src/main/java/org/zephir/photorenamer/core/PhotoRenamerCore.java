@@ -24,7 +24,8 @@ public class PhotoRenamerCore {
 	private boolean rotateImages = false;
 	private boolean retroDateExif = false;
 
-	public static String logPrefix;
+	private static String logPrefix;
+	private static long timeStart;
 
 	public PhotoRenamerCore() {
 	}
@@ -47,6 +48,7 @@ public class PhotoRenamerCore {
 		int nbPhotosRotated = 0;
 		int nbVideosRenamed = 0;
 
+		long totalTimeStart = System.currentTimeMillis();
 		File[] fileFoundList = getFolderToProcess().listFiles();
 		int currentFileNb = 0;
 		int totalFileFound = fileFoundList.length;
@@ -59,9 +61,10 @@ public class PhotoRenamerCore {
 			logPrefix += StringUtils.repeat(" ", prefixMaxLength - logPrefix.length());
 
 			if (!f.exists()) {
-				log.debug(logPrefix + "file deleted: '" + f.getAbsolutePath() + "'");
+				log.debug(getLogPrefix() + "file deleted: '" + f.getAbsolutePath() + "'");
 			} else {
 				if (f.isFile()) {
+					timeStart = System.currentTimeMillis();
 					// file
 					if (isFileExtensionInList(f, PhotoRenamerConstants.FILES_WITH_METADATA_EXTENSION_LIST)) {
 						try {
@@ -76,10 +79,10 @@ public class PhotoRenamerCore {
 									}
 								}
 							} catch (CustomException e) {
-								log.error(logPrefix + "Error during rotation of the photo '" + f.getAbsoluteFile() + "': " + e, e);
+								log.error(getLogPrefix() + "Error during rotation of the photo '" + f.getAbsoluteFile() + "': " + e, e);
 							}
 						} catch (CustomException e) {
-							log.error(logPrefix + "Error during renaming of the photo '" + f.getAbsoluteFile() + "': " + e, e);
+							log.error(getLogPrefix() + "Error during renaming of the photo '" + f.getAbsoluteFile() + "': " + e, e);
 						}
 					} else if (isFileExtensionInList(f, PhotoRenamerConstants.FILES_TO_RENAME_EXTENSION_LIST)) {
 						if (renameExtraFiles) {
@@ -87,19 +90,25 @@ public class PhotoRenamerCore {
 								renameVideo(f);
 								nbVideosRenamed++;
 							} catch (CustomException e) {
-								log.error(logPrefix + "Error during renaming of the video '" + f.getAbsoluteFile() + "': " + e);
+								log.error(getLogPrefix() + "Error during renaming of the video '" + f.getAbsoluteFile() + "': " + e);
 							}
 						} else {
-							log.debug(logPrefix + "Video skipped: '" + f.getAbsolutePath() + "'");
+							log.debug(getLogPrefix() + "Video skipped: '" + f.getAbsolutePath() + "'");
 						}
 					} else {
-						log.debug(logPrefix + "File isn't a JPEG image or video: '" + f.getAbsolutePath() + "'");
+						log.debug(getLogPrefix() + "File isn't a JPEG image or video: '" + f.getAbsolutePath() + "'");
 					}
 				}
 			}
 		}
-		log.debug(nbPhotosRenamed + " photo(s) renamed (" + nbPhotosRotated + " rotated) and " + nbVideosRenamed + " video(s) renamed");
+		long totalTime = System.currentTimeMillis() - totalTimeStart;
+		log.debug(nbPhotosRenamed + " photo(s) renamed (" + nbPhotosRotated + " rotated) and " + nbVideosRenamed + " video(s) renamed in " + totalTime + "ms");
 		log.debug("");
+	}
+
+	public static String getLogPrefix() {
+		long time = System.currentTimeMillis() - timeStart;
+		return logPrefix + "(" + time + "ms) ";
 	}
 
 	private boolean isFileExtensionInList(final File f, final List<String> extensionList) {
@@ -120,7 +129,7 @@ public class PhotoRenamerCore {
 		} catch (CustomException e) {
 			throw e;
 		} catch (Exception e) {
-			log.error(logPrefix + "rotatePhoto(f='" + f.getAbsolutePath() + "') KO: " + e, e);
+			log.error(getLogPrefix() + "rotatePhoto(f='" + f.getAbsolutePath() + "') KO: " + e, e);
 			throw new CustomException("rotatePhoto(f='" + f.getAbsolutePath() + "') KO: " + e, e);
 		}
 	}
@@ -139,13 +148,13 @@ public class PhotoRenamerCore {
 				// try set EXIF -> filename
 				newFile = renameFile(f, originalDate);
 			} else {
-				log.warn(logPrefix + "Can't rename photo '" + f.getAbsoluteFile() + "': No date found.");
+				log.warn(getLogPrefix() + "Can't rename photo '" + f.getAbsoluteFile() + "': No date found.");
 			}
 			return newFile;
 		} catch (CustomException e) {
 			throw e;
 		} catch (Exception e) {
-			log.error(logPrefix + "renamePhoto(f='" + f.getAbsolutePath() + "') KO: " + e, e);
+			log.error(getLogPrefix() + "renamePhoto(f='" + f.getAbsolutePath() + "') KO: " + e, e);
 			throw new CustomException("renamePhoto(f='" + f.getAbsolutePath() + "') KO: " + e, e);
 		}
 	}
@@ -159,7 +168,7 @@ public class PhotoRenamerCore {
 		} catch (CustomException e) {
 			throw e;
 		} catch (Exception e) {
-			log.error(logPrefix + "renameVideo(f='" + f.getAbsolutePath() + "') KO: " + e, e);
+			log.error(getLogPrefix() + "renameVideo(f='" + f.getAbsolutePath() + "') KO: " + e, e);
 			throw new CustomException("renameVideo(f='" + f.getAbsolutePath() + "') KO: " + e, e);
 		}
 	}
@@ -177,7 +186,7 @@ public class PhotoRenamerCore {
 			} catch (ParseException e) {
 			}
 			if (filenameDate == null) {
-				log.warn(logPrefix + "Can't get photo date from EXIF nor filename: '" + f.getAbsoluteFile() + "'");
+				log.warn(getLogPrefix() + "Can't get photo date from EXIF nor filename: '" + f.getAbsoluteFile() + "'");
 
 			} else {
 				// match EXIF with other files delta (in order to reproduce)
@@ -186,12 +195,12 @@ public class PhotoRenamerCore {
 
 				// change EXIF date
 				JpegDAO.setDateTimeOriginal(f, originalDate, true);
-				log.debug(logPrefix + "'" + f.getAbsolutePath() + "' ---> Exif date updated from filename: '" + originalDate + "'");
+				log.debug(getLogPrefix() + "'" + f.getAbsolutePath() + "' ---> Exif date updated from filename: '" + originalDate + "'");
 				d = originalDate;
 			}
 			return d;
 		} catch (Exception e) {
-			log.error(logPrefix + "getDateFromFilenameAndSetExif(f='" + f.getAbsolutePath() + "') KO: " + e, e);
+			log.error(getLogPrefix() + "getDateFromFilenameAndSetExif(f='" + f.getAbsolutePath() + "') KO: " + e, e);
 			throw new CustomException("getDateFromFilenameAndSetExif(f='" + f.getAbsolutePath() + "') KO: " + e, e);
 		}
 	}
@@ -225,11 +234,11 @@ public class PhotoRenamerCore {
 
 			// rename file
 			f.renameTo(newFile);
-			log.debug(logPrefix + "'" + f.getAbsolutePath() + "' ---> '" + newFile.getName() + "'");
+			log.debug(getLogPrefix() + "'" + f.getAbsolutePath() + "' ---> '" + newFile.getName() + "'");
 
 			return newFile;
 		} catch (Exception e) {
-			log.error(logPrefix + "renameFile(f='" + f.getAbsolutePath() + "') KO: " + e, e);
+			log.error(getLogPrefix() + "renameFile(f='" + f.getAbsolutePath() + "') KO: " + e, e);
 			throw new CustomException("renameFile(f='" + f.getAbsolutePath() + "') KO: " + e, e);
 		}
 	}
