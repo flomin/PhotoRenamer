@@ -5,7 +5,7 @@
 
 	<groupId>org.zephir.photorenamer</groupId>
 	<artifactId>PhotoRenamer</artifactId>
-	<version>1.5.8</version>
+	<version>1.5.9</version>
 	<packaging>jar</packaging>
 	<name>ProjectRenamer</name>
 	<description>ProjectRenamer</description>
@@ -31,67 +31,68 @@
 		</developer>
 	</developers>
 
-	<repositories>
-		<!-- repository> <id>Version99</id> <name>Version 99 Does Not Exist Maven 
-			repository</name> <layout>default</layout> <url>http://no-commons-logging.zapto.org/mvn2</url> 
-			</repository -->
-		<repository>
-			<id>central</id>
-			<url>http://repo1.maven.org/maven2/</url>
-		</repository>
-	</repositories>
+<!--	<repositories>-->
+<!--		&lt;!&ndash; repository> <id>Version99</id> <name>Version 99 Does Not Exist Maven -->
+<!--			repository</name> <layout>default</layout> <url>http://no-commons-logging.zapto.org/mvn2</url> -->
+<!--			</repository &ndash;&gt;-->
+<!--		<repository>-->
+<!--			<id>central</id>-->
+<!--			<url>http://repo1.maven.org/maven2/</url>-->
+<!--		</repository>-->
+<!--	</repositories>-->
 
 	<dependencies>
 		<dependency>
-			<groupId>commons-lang</groupId>
-			<artifactId>commons-lang</artifactId>
-			<version>2.5</version>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.11</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
-			<version>1.4</version>
+			<version>2.7</version>
 		</dependency>
+
 		<!--dependency> <groupId>commons-collections</groupId> <artifactId>commons-collections</artifactId> 
 			<version>3.2.1</version> </dependency -->
-		<dependency>
-			<groupId>net.sourceforge.collections</groupId>
-			<artifactId>collections-generic</artifactId>
-			<version>4.01</version>
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>net.sourceforge.collections</groupId>-->
+<!--			<artifactId>collections-generic</artifactId>-->
+<!--			<version>4.01</version>-->
+<!--		</dependency>-->
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
-			<version>1.6.1</version>
+			<version>1.7.30</version>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
-			<version>1.6.1</version>
+			<version>1.7.30</version>
 		</dependency>
 		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
-			<version>1.2.16</version>
+			<version>1.2.17</version>
 		</dependency>
 		<!-- dependency> <groupId>commons-logging</groupId> <artifactId>commons-logging</artifactId> 
 			<version>99.0-does-not-exist</version> </dependency -->
 		<dependency>
 			<groupId>commons-logging</groupId>
 			<artifactId>commons-logging</artifactId>
-			<version>1.1.1</version>
+			<version>1.2</version>
 			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>jcl-over-slf4j</artifactId>
-			<version>1.6.1</version>
+			<version>1.7.30</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.8.2</version>
+			<version>4.13</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -105,16 +106,22 @@
 		<dependency>
 			<groupId>com.adobe.xmp</groupId>
 			<artifactId>xmpcore</artifactId>
-			<version>5.1.2-mod</version>
+			<version>6.1.10</version>
 		</dependency>
 
 		<!-- no public repository found, see file mvn_repo_special_jars.zip -->
 		<dependency>
-			<groupId>org.eclipse</groupId>
-			<artifactId>swt_win32_x86</artifactId>
-			<version>3.6.2</version>
+			<groupId>org.eclipse.swt</groupId>
+			<artifactId>org.eclipse.swt.win32.win32.x86_64</artifactId>
+			<version>4.3</version>
 		</dependency>
-		<!-- dependency> <groupId>org.eclipse</groupId> <artifactId>swt_macosx_x86</artifactId> 
+
+<!--		<dependency>-->
+<!--			<groupId>org.eclipse</groupId>-->
+<!--			<artifactId>swt_win32_x86</artifactId>-->
+<!--			<version>3.6.2</version>-->
+<!--		</dependency>-->
+		<!-- dependency> <groupId>org.eclipse</groupId> <artifactId>swt_macosx_x86</artifactId>
 			<version>3.6.2</version> <scope>provided</scope> </dependency -->
 		<dependency>
 			<groupId>mediachest</groupId>
@@ -148,7 +155,7 @@
 		<plugins>
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
-				<version>2.2.1</version>
+				<version>3.3.0</version>
 				<configuration>
 					<!-- descriptorRefs> <descriptorRef>jar-with-dependencies</descriptorRef> 
 						</descriptorRefs -->
@@ -178,7 +185,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.3.2</version>
+				<version>3.8.1</version>
 				<configuration>
 					<source>${compiler.version}</source>
 					<target>${compiler.version}</target>

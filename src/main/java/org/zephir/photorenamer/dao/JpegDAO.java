@@ -1,5 +1,9 @@
 package org.zephir.photorenamer.dao;
 
+import com.drew.imaging.ImageMetadataReader;
+import com.drew.metadata.Metadata;
+import com.drew.metadata.exif.ExifIFD0Directory;
+import com.drew.metadata.exif.ExifSubIFDDirectory;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.BufferedOutputStream;
@@ -10,9 +14,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
-
 import javax.imageio.ImageIO;
-
+import mediautil.image.jpeg.LLJTran;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.sanselan.ImageReadException;
@@ -34,13 +37,6 @@ import org.slf4j.LoggerFactory;
 import org.zephir.photorenamer.core.PhotoRenamerConstants;
 import org.zephir.photorenamer.core.PhotoRenamerCore;
 import org.zephir.util.exception.CustomException;
-
-import com.drew.imaging.ImageMetadataReader;
-import com.drew.metadata.Metadata;
-import com.drew.metadata.exif.ExifIFD0Directory;
-import com.drew.metadata.exif.ExifSubIFDDirectory;
-
-import mediautil.image.jpeg.LLJTran;
 
 public final class JpegDAO {
 	// ===========================================================

@@ -7,3 +7,5 @@
 /.settings
 /src/test/resources/
 /bin/
+.idea
+/.idea
