@@ -18,7 +18,7 @@ public class PhotoRenamerCore {
   // ===========================================================
   // Constants
   // ===========================================================
-  private static Logger log = LoggerFactory.getLogger(PhotoRenamerCore.class);
+  private static final Logger log = LoggerFactory.getLogger(PhotoRenamerCore.class);
 
   private static final boolean SHOW_TIME_ON_LOG = false;
 

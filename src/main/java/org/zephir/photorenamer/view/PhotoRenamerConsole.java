@@ -19,7 +19,7 @@ import org.zephir.util.exception.CustomException;
  */
 public class PhotoRenamerConsole {
 
-  private static Logger log = LoggerFactory.getLogger(PhotoRenamerConsole.class);
+  private static final Logger log = LoggerFactory.getLogger(PhotoRenamerConsole.class);
 
   private static final String COMMAND_LINE_PARAMETER_PREFIX = "--";
   private static final String COMMAND_LINE_STRING_SEPARATOR = "'";
@@ -38,8 +38,7 @@ public class PhotoRenamerConsole {
 
     try {
       int toRepeat = "_______________".length() - PhotoRenamerConstants.VERSION.length() - 2;
-      log.info(" _______________ \n" + "| PHOTO RENAMER |\n" + " {}v{}¯ \n",
-          StringUtils.repeat("¯", toRepeat), PhotoRenamerConstants.VERSION);
+      log.info(" _______________ \n" + "| PHOTO RENAMER |\n" + " {}v{}¯ \n", StringUtils.repeat("¯", toRepeat), PhotoRenamerConstants.VERSION);
 
       if (args.length > 0) {
         // checking command line args for parameters
@@ -88,7 +87,7 @@ public class PhotoRenamerConsole {
         log.debug("collectArgs(args='[]') args is empty");
         return null;
       }
-      Map<String, String> argsMap = new HashMap<String, String>();
+      Map<String, String> argsMap = new HashMap<>();
 
       for (int i = 0; i < args.length; i++) {
         String arg = args[i];
@@ -108,8 +107,7 @@ public class PhotoRenamerConsole {
                   String argInStringParameter = args[j];
                   if (argInStringParameter.endsWith(COMMAND_LINE_STRING_SEPARATOR)) {
                     // String parameter finished
-                    nextArg +=
-                        " " + argInStringParameter.substring(0, argInStringParameter.length() - COMMAND_LINE_STRING_SEPARATOR.length());
+                    nextArg += " " + argInStringParameter.substring(0, argInStringParameter.length() - COMMAND_LINE_STRING_SEPARATOR.length());
                     i = j - 1;
                     endOfStringParamFound = true;
                     break;
@@ -119,8 +117,7 @@ public class PhotoRenamerConsole {
                   }
                 }
                 if (!endOfStringParamFound) {
-                  log.debug("collectArgs(args='{}') Couldn't find the String parameter end for parameter named '{}'",
-                      StringUtils.join(args, ", "), arg);
+                  log.debug("collectArgs(args='{}') Couldn't find the String parameter end for parameter named '{}'", StringUtils.join(args, ", "), arg);
                   throw new ArgumentsException(arg);
                 }
               }
